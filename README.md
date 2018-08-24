@@ -7,3 +7,6 @@ Fork of the [Detect Cloudflare](https://github.com/traktofon/cf-detect) extensio
 - Hides the icon instead of changing its color to grey or green, when appropriate.
 
 This fork is not listed on AMO, but you can download the signed XPI from [here](https://github.com/claustromaniac/detect-cloudflare-PA/releases).
+
+### Privacy Policy
+This extension neither collects nor shares *any* kind of information whatsoever.
