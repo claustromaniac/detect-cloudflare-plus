@@ -6,4 +6,4 @@ Fork of the [Detect Cloudflare](https://github.com/traktofon/cf-detect) extensio
 - Uses a **P**age-**A**ction type of icon (that appears in the awesomebar), instead of a toolbar icon.
 - Hides the icon instead of changing its color to grey or green, when appropriate.
 
-This fork is not listed on AMO, but you can download the signed XPI from [here](https://github.com/claustromaniac/detect-cloudflare-PA/releases) and install it manually.
+This fork is not listed on AMO, but you can download the signed XPI from [here](https://github.com/claustromaniac/detect-cloudflare-PA/releases).
