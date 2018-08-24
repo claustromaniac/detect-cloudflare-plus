@@ -5,3 +5,5 @@ Fork of the [Detect Cloudflare](https://github.com/traktofon/cf-detect) extensio
 - Uses the onResponseStarted event from the webRequest API instead of onHeadersReceived, which should be safer for what it's needed for in this extension.
 - Uses a page-action type of icon (that appears in the awesomebar), instead of a toolbar icon.
 - Hides the icon instead of displaying the grey or green icons, when appropriate.
+
+This fork is not listed on AMO, but you can download the signed XPI from [here](https://github.com/claustromaniac/detect-cloudflare-PA/releases) and install it manually.
