@@ -1,5 +1,7 @@
 body {
 	padding: 0em 1em;
+	background-color: #222222;
+	color: #AAAAAA;
 }
 
 p#status {

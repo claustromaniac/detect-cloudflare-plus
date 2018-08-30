@@ -1,11 +1,3 @@
-const statusText = {
-	0: "No requests have been processed yet.",
-	1: "No requests were served by Cloudflare.",
-	2: "Requests for these domains were served by Cloudflare:",
-	3: "Requests for these domains were served by Cloudflare:",
-   99: "Detection result unavailable."
-};
-
 var getTab = browser.tabs.query( { active:true, currentWindow:true } );
 
 getTab.then( function( tabs ) {
@@ -14,21 +6,14 @@ getTab.then( function( tabs ) {
 	port.onMessage.addListener( function(msg) {
 		port.disconnect();
 		if (msg) {
-			writeStatus(msg.result);
 			populatePopup(msg.counts);
-		} else {
-			writeStatus(0);
 		}
 	});
 })
+
 .catch( function( error ) {
-	writeStatus(99);
 	console.log(`CF-Detect-Popup: ${error}`);
 });
-
-function writeStatus( st ) {
-	document.getElementById("status").textContent = statusText[st];
-}
 
 function populatePopup( domainCounts ) {
 	let ndomain = 0;
@@ -39,7 +24,7 @@ function populatePopup( domainCounts ) {
 		var li = document.createElement("li");
 		var text = document.createTextNode(`${domain}: `);
 		var span = document.createElement("span");
-		span.setAttribute("class", "domainCounts[domain]");
+		span.setAttribute("class", "count");
 		span.textContent = `${domainCounts[domain]}`;
 		li.appendChild(text);
 		li.appendChild(span);
