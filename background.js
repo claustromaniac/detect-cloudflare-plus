@@ -1,5 +1,4 @@
 const iconColorAndDesc = [
-	false,
 	{ color: "orange", desc: "External resources on this page use Cloudflare." },
 	{ color: "red",    desc: "This page uses Cloudflare!" }
 ];
@@ -30,7 +29,7 @@ function mapToObject( map ) {
 
 function CFInfo() {
 	this.domainCounter = new Counter();
-	this.result = 0;
+	this.result = null;
 	// maybe more in the future
 }
 
@@ -56,7 +55,7 @@ function onError(e) {
 
 function getDomainFromURL( urltxt ) {
 	try {
-		var url = new URL(urltxt);
+		let url = new URL(urltxt);
 		return url.hostname;
 	} catch(err) {
 		return null;
@@ -64,33 +63,28 @@ function getDomainFromURL( urltxt ) {
 }
 
 function updateStatus( tabId ) {
-	var info = cfInfo.getInfo(tabId);
+	let info = cfInfo.getInfo(tabId);
 	if (info) {
-		if (info.result >= 2) return; // no need for further updates
-		var counts = info.domainCounter.counts;
-		if (counts.size) {
+		if (info.result >= 1) return; // no need for further updates
+		if (info.domainCounter.counts.size) {
 			browser.tabs.get(tabId).then( function(tab) {
-				var domain = getDomainFromURL(tab.url);
-				if (counts.has(domain)) {
-					info.result = 2;
-					updateIcon( tabId, 2 );
-				} else {
+				if (info.domainCounter.counts.has( getDomainFromURL(tab.url) )) {
 					info.result = 1;
 					updateIcon( tabId, 1 );
-				}})
-				.catch( onError );
-				return
+				} else if (info.result !== 0) {
+					info.result = 0;
+					updateIcon( tabId, 0 );
+				}
+			})
+			.catch( onError );
+			return
 		}
 	}
-	updateIcon( tabId, 0 );
+	browser.pageAction.hide(tabId);
 }
 
 function updateIcon( tabId, result ) {
-	var cd = iconColorAndDesc[result];
-	if (!cd) {
-		browser.pageAction.hide(tabId);
-		return
-	}
+	let cd = iconColorAndDesc[result];
 	browser.pageAction.show(tabId);
 	browser.pageAction.setTitle({
 		tabId: tabId,
@@ -106,79 +100,72 @@ function updateIcon( tabId, result ) {
 	});
 }
 
-function cfdetect( details ) {
-	var headers = details.responseHeaders;
-	var cf = false;
-	for (var i=0; i<headers.length; i++) {
-		var h = headers[i];
-		var hname = h.name.toLowerCase();
-		if ((hname === "cf-ray") ||
-			(hname === "server" && h.value === "cloudflare-nginx")) {
-			cf = true;
-			break;
-		}
-	}
-	var tabId = details.tabId;
-	if (tabId == -1) return;
-	var info = cfInfo.getOrCreate(tabId);
-	if (cf) {
-		var ctr = info.domainCounter;
-		var domain = getDomainFromURL( details.url );
-		ctr.incCount(domain);
-	}
-	updateStatus(tabId);
-}
-
-function handleBeforeNavigate( details ) {
-	if (details.frameId == 0) {
-		cfInfo.delInfo( details.tabId );
-		updateStatus( details.tabId );
-	}
-}
-
-function handleTabUpdate( tabId, changeInfo, tabInfo ) {
-	if ("url" in changeInfo) {
-		updateStatus( tabId );
-	}
-}
-
-function handleTabClose( tabId, removeInfo ) {
-	cfInfo.delInfo(tabId);
-}
-
-function handleTabReplace( newId, oldId ) {
-	cfInfo.delInfo(oldId);
-}
-
-// triggered by popup script
-function handleConnect(port) {
-	port.onMessage.addListener( function(tabId) {
-		var info = cfInfo.getInfo(tabId);
-		var msg;
-		if (info) {
-			msg = {
-				result: info.result,
-				counts: mapToObject(info.domainCounter.counts)
-			};
-		} else {
-			msg = null;
-		}
-		port.postMessage(msg);
-	});
-}
-
 browser.webRequest.onResponseStarted.addListener(
-	cfdetect,
-	{ urls: [ "<all_urls>" ] },
-	[ "responseHeaders" ]
+	function(d) {
+		let cf = false;
+		for (var i in d.responseHeaders) {
+			var hname = d.responseHeaders[i].name.toLowerCase();
+			if ((hname === "cf-ray") || (hname === "server" && d.responseHeaders[i].value.toLowerCase() === "cloudflare-nginx")) {
+				cf = true;
+				break;
+			}
+		}
+		if (d.tabId == -1) return;
+		let info = cfInfo.getOrCreate(d.tabId);
+		if (cf) {
+			info.domainCounter.incCount( getDomainFromURL(d.url) );
+		}
+		updateStatus(d.tabId);
+	},
+	{ urls: [ "<all_urls>" ] }, [ "responseHeaders" ]
 );
 
-browser.webNavigation.onBeforeNavigate.addListener( handleBeforeNavigate );
+browser.webNavigation.onBeforeNavigate.addListener(
+	function(d) {
+		if (d.frameId == 0) {
+			cfInfo.delInfo(d.tabId);
+			updateStatus(d.tabId);
+		}
+	}
+);
 
-browser.tabs.onUpdated.addListener( handleTabUpdate );
-browser.tabs.onRemoved.addListener( handleTabClose );
-browser.tabs.onReplaced.addListener( handleTabReplace );
+browser.tabs.onUpdated.addListener(
+	function(tabId, changeInfo, tabInfo) {
+		if ("url" in changeInfo) {
+			updateStatus( tabId );
+		}
+	}
+);
 
-browser.runtime.onConnect.addListener( handleConnect );
+browser.tabs.onRemoved.addListener(
+	function(tabId, removeInfo) {
+		cfInfo.delInfo(tabId);
+	}
+);
+
+browser.tabs.onReplaced.addListener(
+	function(newId, oldId) {
+		cfInfo.delInfo(oldId);
+	}
+);
+
+browser.runtime.onConnect.addListener(
+// triggered by popup script
+	function(port) {
+		port.onMessage.addListener( function(tabId) {
+			let info = cfInfo.getInfo(tabId);
+			let msg;
+			if (info) {
+				msg = {
+					result: info.result,
+					counts: mapToObject(info.domainCounter.counts)
+				};
+			} else {
+				msg = null;
+			}
+			port.postMessage(msg);
+		});
+	}
+);
 
 // vim: set expandtab ts=4 sw=4 :

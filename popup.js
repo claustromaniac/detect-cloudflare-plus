@@ -9,9 +9,8 @@ const statusText = {
 var getTab = browser.tabs.query( { active:true, currentWindow:true } );
 
 getTab.then( function( tabs ) {
-	var tab = tabs[0];
-	var port = browser.runtime.connect();
-	port.postMessage(tab.id);
+	let port = browser.runtime.connect();
+	port.postMessage(tabs[0].id);
 	port.onMessage.addListener( function(msg) {
 		port.disconnect();
 		if (msg) {
@@ -28,28 +27,25 @@ getTab.then( function( tabs ) {
 });
 
 function writeStatus( st ) {
-	var p = document.getElementById("status");
-	p.textContent = statusText[st];
+	document.getElementById("status").textContent = statusText[st];
 }
 
 function populatePopup( domainCounts ) {
-	var ndomain = 0;
-	var div = document.getElementById("top");
-	var ul = document.createElement("ul");
+	let ndomain = 0;
+	let ul = document.createElement("ul");
 	for (var domain in domainCounts) {
 		if (!domainCounts.hasOwnProperty(domain)) continue;
 		++ndomain;
-		var count = domainCounts[domain];
 		var li = document.createElement("li");
 		var text = document.createTextNode(`${domain}: `);
 		var span = document.createElement("span");
-		span.setAttribute("class", "count");
-		span.textContent = `${count}`;
+		span.setAttribute("class", "domainCounts[domain]");
+		span.textContent = `${domainCounts[domain]}`;
 		li.appendChild(text);
 		li.appendChild(span);
 		ul.appendChild(li);
 	}
-	if (ndomain>0) div.appendChild(ul);
+	if (ndomain) document.getElementById("top").appendChild(ul);
 }
 
 // vim: set expandtab ts=4 sw=4 :
