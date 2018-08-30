@@ -1,16 +1,16 @@
 body {
-    padding: 0em 1em;
+	padding: 0em 1em;
 }
 
 p#status {
-    font-weight: bold;
+	font-weight: bold;
 }
 
 ul {
-    margin-top: -1ex;
-    padding-left: 1em;
+	margin-top: -1ex;
+	padding-left: 1em;
 }
 
 .count {
-    color: #cc0000;
+	color: #cc0000;
 }
