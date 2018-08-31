@@ -21,7 +21,7 @@ function Counter() {
 	};
 }
 
-function mapToObject( map ) {
+function mapToObject(map) {
 	obj = {};
 	map.forEach( function(val,key) { obj[key]=val; } );
 	return obj;
@@ -53,7 +53,7 @@ function onError(e) {
 	console.log(`CF-Detect-Background: ${e}`);
 }
 
-function getDomainFromURL( urltxt ) {
+function getDomainFromURL(urltxt) {
 	try {
 		let url = new URL(urltxt);
 		return url.hostname;
@@ -62,7 +62,7 @@ function getDomainFromURL( urltxt ) {
 	}
 }
 
-function updateStatus( tabId ) {
+function updateStatus(tabId) {
 	let info = cfInfo.getInfo(tabId);
 	if (info) {
 		if (info.result >= 1) return; // no need for further updates
@@ -83,7 +83,7 @@ function updateStatus( tabId ) {
 	browser.pageAction.hide(tabId);
 }
 
-function updateIcon( tabId, result ) {
+function updateIcon(tabId, result) {
 	let cd = iconColorAndDesc[result];
 	browser.pageAction.show(tabId);
 	browser.pageAction.setTitle({
@@ -132,7 +132,7 @@ browser.webNavigation.onBeforeNavigate.addListener(
 browser.tabs.onUpdated.addListener(
 	function(tabId, changeInfo, tabInfo) {
 		if ("url" in changeInfo) {
-			updateStatus( tabId );
+			updateStatus(tabId);
 		}
 	}
 );
@@ -154,14 +154,12 @@ browser.runtime.onConnect.addListener(
 	function(port) {
 		port.onMessage.addListener( function(tabId) {
 			let info = cfInfo.getInfo(tabId);
-			let msg;
+			let msg = null;
 			if (info) {
 				msg = {
 					result: info.result,
 					counts: mapToObject(info.domainCounter.counts)
 				};
-			} else {
-				msg = null;
 			}
 			port.postMessage(msg);
 		});
