@@ -8,9 +8,9 @@ Fork of the [Detect Cloudflare](https://github.com/traktofon/cf-detect) extensio
 - Uses light text on dark background for the popup style.
 - Minor optimizations.
 
-This fork is not listed on AMO, but you can download the signed XPI from [here](https://github.com/claustromaniac/detect-cloudflare-PA/releases).
+This fork is not listed on AMO for the time being, but you can download the signed XPI from [here](https://github.com/claustromaniac/detect-cloudflare-PA/releases).
 
-This extension neither collects nor shares *any* kind of information whatsoever.
+This extension neither collects nor shares any kind of information whatsoever.
 
 ### Motivation
 
