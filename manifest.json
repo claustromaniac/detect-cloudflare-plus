@@ -2,8 +2,8 @@
 
 	"manifest_version": 2,
 	"name": "Detect Cloudflare PA",
-	"description": "Displays an icon on the adress bar whenever the current page uses Cloudflare. Detection is performed by analyzing the response headers of all requests.",
-	"version": "0.9.0",
+	"description": "Displays an icon in the adress bar whenever the current page uses Cloudflare. Detection is performed by analyzing the response headers of all requests.",
+	"version": "0.10.0",
 
 	"applications": {
 		"gecko": {
@@ -20,7 +20,6 @@
 
 	"permissions": [
 		"webRequest",
-		"webNavigation",
 		"tabs",
 		"<all_urls>"
 	],

@@ -100,8 +100,13 @@ function updateIcon(tabId, result) {
 	});
 }
 
-browser.webRequest.onResponseStarted.addListener(
+browser.webRequest.onCompleted.addListener(
 	function(d) {
+		if (d.tabId === -1) return;
+		if (d.type === 'main_frame' && cfInfo.getInfo(d.tabId)) {
+			cfInfo.delInfo(d.tabId);
+		}
+		let info = cfInfo.getOrCreate(d.tabId);
 		let cf = false;
 		for (var i in d.responseHeaders) {
 			var hname = d.responseHeaders[i].name.toLowerCase();
@@ -110,31 +115,12 @@ browser.webRequest.onResponseStarted.addListener(
 				break;
 			}
 		}
-		if (d.tabId == -1) return;
-		let info = cfInfo.getOrCreate(d.tabId);
 		if (cf) {
 			info.domainCounter.incCount( getDomainFromURL(d.url) );
 		}
 		updateStatus(d.tabId);
 	},
 	{ urls: [ "<all_urls>" ] }, [ "responseHeaders" ]
-);
-
-browser.webNavigation.onBeforeNavigate.addListener(
-	function(d) {
-		if (d.frameId == 0) {
-			cfInfo.delInfo(d.tabId);
-			updateStatus(d.tabId);
-		}
-	}
-);
-
-browser.tabs.onUpdated.addListener(
-	function(tabId, changeInfo, tabInfo) {
-		if ("url" in changeInfo) {
-			updateStatus(tabId);
-		}
-	}
 );
 
 browser.tabs.onRemoved.addListener(
