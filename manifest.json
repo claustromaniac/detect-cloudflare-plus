@@ -26,7 +26,7 @@
 	],
 
 	"background": {
-		"scripts": [ "background.js" ]
+		"scripts": [ "detect-cloudflare.js" ]
 	},
 
 	"page_action": {
