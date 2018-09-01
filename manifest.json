@@ -1,10 +1,4 @@
 {
-
-	"manifest_version": 2,
-	"name": "Detect Cloudflare PA",
-	"description": "Displays an icon in the adress bar whenever the current page uses Cloudflare. Detection is performed by analyzing the response headers of all requests.",
-	"version": "0.10.0",
-
 	"applications": {
 		"gecko": {
 			"id": "Detect-Cloudflare-PA@cm.org",
@@ -12,21 +6,20 @@
 		}
 	},
 
+	"background": {
+		"scripts": [ "detect-cloudflare.js" ]
+	},
+
+	"description": "Displays an icon in the adress bar whenever the current page uses Cloudflare. Detection is performed by analyzing the response headers of all requests.",
+
 	"icons": {
 		"16": "icons/cf-orange-16.png",
 		"32": "icons/cf-orange-32.png",
 		"64": "icons/cf-orange-64.png"
 	},
 
-	"permissions": [
-		"webRequest",
-		"tabs",
-		"<all_urls>"
-	],
-
-	"background": {
-		"scripts": [ "detect-cloudflare.js" ]
-	},
+	"manifest_version": 2,
+	"name": "Detect Cloudflare PA",
 
 	"page_action": {
 		"browser_style": true,
@@ -37,6 +30,13 @@
 		},
 		"default_title": "",
 		"default_popup": "popup/popup.html"
-	}
+	},
 
+	"permissions": [
+		"webRequest",
+		"tabs",
+		"<all_urls>"
+	],
+
+	"version": "0.10.0"
 }
