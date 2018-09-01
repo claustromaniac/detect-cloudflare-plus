@@ -36,7 +36,7 @@
 			"64": "icons/cf-orange-64.png"
 		},
 		"default_title": "",
-		"default_popup": "popup.html"
+		"default_popup": "popup/popup.html"
 	}
 
 }
