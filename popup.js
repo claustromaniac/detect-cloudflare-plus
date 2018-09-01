@@ -1,21 +1,21 @@
-var getTab = browser.tabs.query( { active:true, currentWindow:true } );
+var getTab = browser.tabs.query({ active: true, currentWindow: true });
 
-getTab.then( function( tabs ) {
-	let port = browser.runtime.connect();
-	port.postMessage(tabs[0].id);
-	port.onMessage.addListener( function(msg) {
-		port.disconnect();
-		if (msg) {
-			populatePopup(msg.counts);
-		}
+getTab.then((tabs) => {
+		let port = browser.runtime.connect();
+		port.postMessage(tabs[0].id);
+		port.onMessage.addListener((msg) => {
+			port.disconnect();
+			if (msg) {
+				populatePopup(msg.counts);
+			}
+		});
+	})
+
+	.catch((error) => {
+		console.log(`CF-Detect-Popup: ${error}`);
 	});
-})
 
-.catch( function( error ) {
-	console.log(`CF-Detect-Popup: ${error}`);
-});
-
-function populatePopup( domainCounts ) {
+function populatePopup(domainCounts) {
 	let ndomain = 0;
 	let ul = document.createElement("ul");
 	for (var domain in domainCounts) {
@@ -32,5 +32,3 @@ function populatePopup( domainCounts ) {
 	}
 	if (ndomain) document.getElementById("top").appendChild(ul);
 }
-
-// vim: set expandtab ts=4 sw=4 :
