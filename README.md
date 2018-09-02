@@ -7,7 +7,7 @@ Almost fully rewritten fork of the [Detect Cloudflare](https://github.com/trakto
 - Uses the orange cloud as the default icon.
 - Shows the total number of responses served by Cloudflare in a badge on the toolbar icon.
 - Does not change the color of the toolbar icon. Instead, it changes the color of the badge.
-- Adds an optional **P**age-**A**ction type of icon (that appears in the address bar). The color of this icon **does** change because it cannot have a badge.
+- Adds an optional page-action type of icon (that appears in the address bar). The color of this icon **does** change because it cannot have a badge.
 - Uses light text on dark background for the popup style.
 - Various performance optimizations and some very minor fixes.
 
