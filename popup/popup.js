@@ -21,7 +21,7 @@ getTab.then((tabs) => {
 		});
 	})
 	.catch((e) => {
-		writeStatus(-1);
+		writeStatus(0);
 		console.log(`Detect-Cloudflare-Popup: ${e}`);
 	});
 
