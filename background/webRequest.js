@@ -1,11 +1,10 @@
 browser.webRequest.onCompleted.addListener((d) => {
 	if (d.tabId === -1) return;
 	let isDoc = d.type === 'main_frame';
-	let info = cfInfo.getOrCreate(d.tabId);
 	if (isDoc) {
 		cfInfo.delInfo(d.tabId);
-		info = cfInfo.getOrCreate(d.tabId);
 	}
+	let info = cfInfo.getOrCreate(d.tabId);
 	let result = info.result;
 	let badgeNum = info.badgeNum;
 	for (var i in d.responseHeaders) {
