@@ -14,11 +14,14 @@ browser.webRequest.onCompleted.addListener((d) => {
 			if (!info.result) {
 				info.result = isDoc ? 2 : 1;
 			}
+			++info.badgeNum
 			break;
 		}
 	}
+	if (info.badgeNum) {
+		updateBadge(d.tabId, info.result, info.badgeNum.toString());
+	}
 	if (p_res !== info.result) {
-		updateBadge(d.tabId, info.result, (++info.badgeNum).toString());
 		if (paEnabled) {
 			updateIcon(d.tabId, info.result);
 		}
