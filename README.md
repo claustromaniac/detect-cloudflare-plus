@@ -1,14 +1,15 @@
-Detect Cloudflare PA
---------------------
+Detect Cloudflare+
+------------------
 
-Fork of the [Detect Cloudflare](https://github.com/traktofon/cf-detect) extension for Firefox by [traktofon](https://github.com/traktofon), with the following differences (as of 2018-08-31):
-- Uses the `onCompleted` event from the [webRequest API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/) instead of `onHeadersReceived`, which should be safer for what it's needed for in this extension.
-- Uses a **P**age-**A**ction type of icon (that appears in the address bar), instead of a toolbar icon.
-- Hides the icon instead of changing its color to grey or green, when appropriate.
+Almost fully rewritten fork of the [Detect Cloudflare](https://github.com/traktofon/cf-detect) extension for Firefox by [traktofon](https://github.com/traktofon). It has the following differences (as of 2018-09-01):
+- Uses the `onCompleted` event from the [webRequest API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/) instead of `onHeadersReceived` because multiple `onHeadersReceived` listeners [conflict with one another](https://github.com/ghacksuserjs/ghacks-user.js/issues/265), and this extension doesn't need to modify any headers to work, so it is not necessary.
+- Does not use the webNavigation API, so it doesn't need permissions for that.
+- Uses the orange cloud as the default icon.
+- Shows the total number of responses served by Cloudflare in a badge on the toolbar icon.
+- Does not change the color of the toolbar icon. Instead, it changes the color of the badge.
+- Adds an optional **P**age-**A**ction type of icon (that appears in the address bar). The color of this icon **does** change because it cannot have a badge.
 - Uses light text on dark background for the popup style.
-- Various optimizations.
-
-This fork is not listed on AMO for the time being, but you can download the signed XPI from [here](https://github.com/claustromaniac/detect-cloudflare-PA/releases).
+- Various performance optimizations and some very minor fixes.
 
 This extension neither collects nor shares any kind of information whatsoever.
 

@@ -1,19 +1,33 @@
-var getTab = browser.tabs.query({ active: true, currentWindow: true });
+const statusText = [
+	"Cloudflare not detected.",
+	"Requests for these third-party domains were served by Cloudflare:",
+	"Requests for these domains were served by Cloudflare:"
+];
+
+var getTab = browser.tabs.query({
+	active: true,
+	currentWindow: true
+});
 
 getTab.then((tabs) => {
 		let port = browser.runtime.connect();
 		port.postMessage(tabs[0].id);
 		port.onMessage.addListener((msg) => {
 			port.disconnect();
-			if (msg) {
+			writeStatus(msg.result);
+			if (msg.result) {
 				populatePopup(msg.counts);
 			}
 		});
 	})
-
-	.catch((error) => {
-		console.log(`CF-Detect-Popup: ${error}`);
+	.catch((e) => {
+		writeStatus(-1);
+		console.log(`Detect-Cloudflare-Popup: ${e}`);
 	});
+
+function writeStatus(st) {
+	document.getElementById("status").textContent = statusText[st];
+}
 
 function populatePopup(domainCounts) {
 	let ndomain = 0;
