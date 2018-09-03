@@ -11,7 +11,7 @@ browser.storage.onChanged.addListener((changes) => {
 		});
 	} else {
 		cfInfo.info.forEach((val, key) => {
-			updateIcon(key, 0);
+			browser.pageAction.hide(key);
 		});
 	}
 })

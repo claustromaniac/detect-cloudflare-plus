@@ -51,10 +51,6 @@ function CFInfoByTab() {
 }
 
 function updateIcon(tabId, result) {
-	if (!result) {
-		browser.pageAction.hide(tabId);
-		return;
-	}
 	browser.pageAction.show(tabId);
 	browser.pageAction.setTitle({
 		tabId: tabId,
