@@ -1,7 +1,7 @@
 const statusText = [
 	"Cloudflare not detected.",
-	"Requests for these third-party domains were served by Cloudflare:",
-	"Requests for these domains were served by Cloudflare:"
+	"External resources from these domains were served by Cloudflare:",
+	"Resources from these domains were served by Cloudflare:"
 ];
 
 var getTab = browser.tabs.query({
