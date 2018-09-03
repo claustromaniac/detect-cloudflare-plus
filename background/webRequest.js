@@ -9,21 +9,19 @@ browser.webRequest.onCompleted.addListener((d) => {
 	let badgeNum = info.badgeNum;
 	for (var i in d.responseHeaders) {
 		var hname = d.responseHeaders[i].name.toLowerCase();
-		if ((hname === "cf-ray") || (hname === "server" && d.responseHeaders[i].value.toLowerCase() === "cloudflare-nginx")) {
+		if ((hname === 'cf-ray') || (hname === 'server' && ~d.responseHeaders[i].value.toLowerCase().indexOf('cloudflare'))) {
 			info.domainCounter.incCount(getDomainFromURL(d.url));
 			if (!info.result) {
 				info.result = isDoc ? 2 : 1;
 			}
-			++info.badgeNum
+			++info.badgeNum;
 			break;
 		}
 	}
 	if (badgeNum != info.badgeNum) {
 		updateBadge(d.tabId, info.result, info.badgeNum.toString());
 	}
-	if (result !== info.result) {
-		if (paEnabled) {
-			updateIcon(d.tabId, info.result);
-		}
+	if (paEnabled && result !== info.result) {
+		updateIcon(d.tabId, info.result);
 	}
 }, { urls: ["<all_urls>"] }, ["responseHeaders"]);
