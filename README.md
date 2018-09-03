@@ -1,7 +1,9 @@
 Detect Cloudflare+
 ------------------
 
-Almost fully rewritten fork of the [Detect Cloudflare](https://github.com/traktofon/cf-detect) extension for Firefox by [traktofon](https://github.com/traktofon). It has the following differences (as of 2018-09-01):
+https://addons.mozilla.org/firefox/addon/detect-cloudflare-plus/
+
+This Firefox extension is an almost fully rewritten fork of [Detect Cloudflare](https://github.com/traktofon/cf-detect) by [traktofon](https://github.com/traktofon). It has the following differences (as of 2018-09-03):
 - Uses the `onCompleted` event from the [webRequest API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/) instead of `onHeadersReceived` because multiple `onHeadersReceived` listeners [conflict with one another](https://github.com/ghacksuserjs/ghacks-user.js/issues/265), and this extension doesn't need to modify any headers to work, so it is not necessary.
 - Does not use the webNavigation API, so it doesn't need permissions for that.
 - Uses the orange cloud as the default icon.
