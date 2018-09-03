@@ -13,6 +13,8 @@ This Firefox extension is an almost fully rewritten fork of [Detect Cloudflare](
 - Uses light text on dark background for the popup style.
 - Various performance optimizations and some very minor fixes.
 
+### Privacy
+
 This extension neither collects nor shares any kind of information whatsoever.
 
 ### Motivation
