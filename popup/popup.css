@@ -1,7 +1,7 @@
 body {
 	padding: 0em 1em;
-	background-color: #222222;
-	color: #AAAAAA;
+	background-color: #222;
+	color: #aaa;
 }
 
 p#status {
@@ -14,5 +14,5 @@ ul {
 }
 
 .count {
-	color: #cc0000;
+	color: #c00;
 }
