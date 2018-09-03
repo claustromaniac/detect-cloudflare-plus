@@ -1,4 +1,4 @@
-browser.webRequest.onCompleted.addListener((d) => {
+browser.webRequest.onResponseStarted.addListener((d) => {
 	if (d.tabId === -1) return;
 	let isDoc = d.type === 'main_frame';
 	if (isDoc) {
@@ -16,12 +16,42 @@ browser.webRequest.onCompleted.addListener((d) => {
 		}
 	}
 	if (badgeNum != info.badgeNum) {
+		requestsByID[d.requestID] = 0;
 		if (!info.result) {
 			info.result = isDoc ? 2 : 1;
-			if (paEnabled) {
-				updateIcon(d.tabId, info.result);
-			}
+			requestsByID[d.requestID] = paEnabled ? info.result : 0;
 		}
-		updateBadge(d.tabId, info.result, info.badgeNum.toString());
 	}
 }, { urls: ["<all_urls>"] }, ["responseHeaders"]);
+
+let respCallback = (d) => {
+	if (d.requestID in requestsByID) {
+		updateBadge(d.tabId);
+		if (requestsByID[d.requestID]) {
+			updateIcon(d.tabId, requestsByID[d.requestID]);
+		}
+		delete requestsByID[d.requestID];
+	}
+}
+
+browser.webRequest.onErrorOccurred.addListener(
+	respCallback,
+	{ urls: ["<all_urls>"] }
+);
+
+browser.webRequest.onCompleted.addListener(
+	respCallback,
+	{ urls: ["<all_urls>"] }
+);
+
+browser.webRequest.onBeforeRedirect.addListener((d) => {
+	if (d.requestID in requestsByID) {
+		if (0 === d.redirectURL.indexOf('data://')){
+			updateBadge(d.tabId);
+			if (requestsByID[d.requestID]) {
+				updateIcon(d.tabId, requestsByID[d.requestID]);
+			}
+			delete requestsByID[d.requestID];
+		}
+	}
+}, { urls: ["<all_urls>"] });

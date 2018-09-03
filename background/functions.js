@@ -66,17 +66,18 @@ function updateIcon(tabId, result) {
 	});
 }
 
-function updateBadge(tabId, result, badgeNum) {
+function updateBadge(tabId) {
+	let info = cfInfo.getOrCreate(tabId);
 	browser.browserAction.setBadgeBackgroundColor({
-		color: iconColorAndDesc[result].color,
+		color: iconColorAndDesc[info.result].color,
 		tabId: tabId
 	});
 	browser.browserAction.setBadgeText({
-		text: badgeNum,
+		text: info.badgeNum.toString(),
 		tabId: tabId
 	});
 	browser.browserAction.setTitle({
 		tabId: tabId,
-		title: iconColorAndDesc[result].desc
+		title: iconColorAndDesc[info.result].desc
 	});
 }
