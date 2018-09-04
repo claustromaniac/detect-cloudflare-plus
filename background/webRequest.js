@@ -9,7 +9,7 @@ browser.webRequest.onResponseStarted.addListener((d) => {
 	for (var i in d.responseHeaders) {
 		var hname = d.responseHeaders[i].name.toLowerCase();
 		if ((hname === 'cf-ray') || (hname === 'server' &&
-		~d.responseHeaders[i].value.toLowerCase().indexOf('cloudflare'))) {
+				~d.responseHeaders[i].value.toLowerCase().indexOf('cloudflare'))) {
 			info.domainCounter.incCount(getDomainFromURL(d.url));
 			++info.badgeNum;
 			break;
@@ -35,18 +35,16 @@ let respCallback = (d) => {
 }
 
 browser.webRequest.onErrorOccurred.addListener(
-	respCallback,
-	{ urls: ["<all_urls>"] }
+	respCallback, { urls: ["<all_urls>"] }
 );
 
 browser.webRequest.onCompleted.addListener(
-	respCallback,
-	{ urls: ["<all_urls>"] }
+	respCallback, { urls: ["<all_urls>"] }
 );
 
 browser.webRequest.onBeforeRedirect.addListener((d) => {
 	if (d.requestID in requestsByID) {
-		if (0 === d.redirectURL.indexOf('data://')){
+		if (0 === d.redirectURL.indexOf('data://')) {
 			updateBadge(d.tabId);
 			if (requestsByID[d.requestID]) {
 				updateIcon(d.tabId, requestsByID[d.requestID]);
