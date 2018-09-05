@@ -51,6 +51,9 @@ function CFInfoByTab() {
 }
 
 function updateIcon(tabId, result) {
+	let info = cfInfo.getInfo(tabId);
+	if (info.result) return;
+	info.result = result;
 	browser.pageAction.show(tabId);
 	browser.pageAction.setTitle({
 		tabId: tabId,
@@ -67,7 +70,7 @@ function updateIcon(tabId, result) {
 }
 
 function updateBadge(tabId) {
-	let info = cfInfo.getOrCreate(tabId);
+	let info = cfInfo.getInfo(tabId);
 	browser.browserAction.setBadgeBackgroundColor({
 		color: iconColorAndDesc[info.result].color,
 		tabId: tabId
@@ -80,4 +83,12 @@ function updateBadge(tabId) {
 		tabId: tabId,
 		title: iconColorAndDesc[info.result].desc
 	});
+}
+
+function respCallback(d) {
+	if (d.requestID in requestsByID) {
+		updateBadge(d.tabId);
+		updateIcon(d.tabId, requestsByID[d.requestID]);
+		delete requestsByID[d.requestID];
+	}
 }

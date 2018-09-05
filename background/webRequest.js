@@ -1,4 +1,4 @@
-browser.webRequest.onResponseStarted.addListener((d) => {
+browser.webRequest.onResponseStarted.addListener(d => {
 	if (d.tabId === -1) return;
 	let isDoc = d.type === 'main_frame';
 	if (isDoc) {
@@ -16,40 +16,20 @@ browser.webRequest.onResponseStarted.addListener((d) => {
 		}
 	}
 	if (badgeNum != info.badgeNum) {
-		requestsByID[d.requestID] = 0;
-		if (!info.result) {
-			info.result = isDoc ? 2 : 1;
-			requestsByID[d.requestID] = paEnabled ? info.result : 0;
-		}
+		requestsByID[d.requestID] = paEnabled ? (isDoc ? 2 : 1) : 0;
 	}
 }, { urls: ["<all_urls>"] }, ["responseHeaders"]);
 
-let respCallback = (d) => {
-	if (d.requestID in requestsByID) {
-		updateBadge(d.tabId);
-		if (requestsByID[d.requestID]) {
-			updateIcon(d.tabId, requestsByID[d.requestID]);
-		}
-		delete requestsByID[d.requestID];
-	}
-}
+browser.webRequest.onErrorOccurred.addListener(d => {
+	respCallback(d);
+}, { urls: ["<all_urls>"] });
 
-browser.webRequest.onErrorOccurred.addListener(
-	respCallback, { urls: ["<all_urls>"] }
-);
+browser.webRequest.onCompleted.addListener(d => {
+	respCallback(d);
+}, { urls: ["<all_urls>"] });
 
-browser.webRequest.onCompleted.addListener(
-	respCallback, { urls: ["<all_urls>"] }
-);
-
-browser.webRequest.onBeforeRedirect.addListener((d) => {
-	if (d.requestID in requestsByID) {
-		if (0 === d.redirectURL.indexOf('data://')) {
-			updateBadge(d.tabId);
-			if (requestsByID[d.requestID]) {
-				updateIcon(d.tabId, requestsByID[d.requestID]);
-			}
-			delete requestsByID[d.requestID];
-		}
+browser.webRequest.onBeforeRedirect.addListener(d => {
+	if (0 === d.redirectURL.indexOf('data://')) {
+		respCallback(d);
 	}
 }, { urls: ["<all_urls>"] });

@@ -9,10 +9,10 @@ var getTab = browser.tabs.query({
 	currentWindow: true
 });
 
-getTab.then((tabs) => {
+getTab.then(tabs => {
 		let port = browser.runtime.connect();
 		port.postMessage(tabs[0].id);
-		port.onMessage.addListener((msg) => {
+		port.onMessage.addListener(msg => {
 			port.disconnect();
 			writeStatus(msg.result);
 			if (msg.result) {
@@ -20,7 +20,7 @@ getTab.then((tabs) => {
 			}
 		});
 	})
-	.catch((e) => {
+	.catch(e => {
 		writeStatus(0);
 		console.log(`Detect-Cloudflare-Popup: ${e}`);
 	});

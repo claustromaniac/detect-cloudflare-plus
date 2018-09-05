@@ -1,6 +1,6 @@
-browser.runtime.onConnect.addListener((port) => {
+browser.runtime.onConnect.addListener(port => {
 	// triggered by popup script
-	port.onMessage.addListener((tabId) => {
+	port.onMessage.addListener(tabId => {
 		let info = cfInfo.getInfo(tabId);
 		let msg = { result: 0 };
 		if (info) {
