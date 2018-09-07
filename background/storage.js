@@ -7,7 +7,7 @@ browser.storage.onChanged.addListener(changes => {
 	paEnabled = changes.paEnabled.newValue;
 	if (paEnabled) {
 		cfInfo.info.forEach((val, key) => {
-			updateIcon(key, val.result);
+			updatePageAction(key, val.result);
 		});
 	} else {
 		cfInfo.info.forEach((val, key) => {

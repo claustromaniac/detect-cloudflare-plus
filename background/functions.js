@@ -50,10 +50,8 @@ function CFInfoByTab() {
 	};
 }
 
-function updateIcon(tabId, result) {
-	let info = cfInfo.getInfo(tabId);
-	if (info.result) return;
-	info.result = result;
+function updatePageAction(tabId, result) {
+	if (!result) return;
 	browser.pageAction.show(tabId);
 	browser.pageAction.setTitle({
 		tabId: tabId,
@@ -69,26 +67,26 @@ function updateIcon(tabId, result) {
 	});
 }
 
-function updateBadge(tabId) {
-	let info = cfInfo.getInfo(tabId);
-	browser.browserAction.setBadgeBackgroundColor({
-		color: iconColorAndDesc[info.result].color,
-		tabId: tabId
-	});
-	browser.browserAction.setBadgeText({
-		text: info.badgeNum.toString(),
-		tabId: tabId
-	});
-	browser.browserAction.setTitle({
-		tabId: tabId,
-		title: iconColorAndDesc[info.result].desc
-	});
-}
-
 function respCallback(d) {
 	if (d.requestID in requestsByID) {
-		updateBadge(d.tabId);
-		updateIcon(d.tabId, requestsByID[d.requestID]);
+		let info = cfInfo.getInfo(tabId);
+		if (!info.result) {
+			info.result = requestsByID[d.requestID];
+			updatePageAction(d.tabId, info.result);
+		}
+		// update badge
+		browser.browserAction.setBadgeBackgroundColor({
+			color: iconColorAndDesc[info.result].color,
+			tabId: d.tabId
+		});
+		browser.browserAction.setBadgeText({
+			text: info.badgeNum.toString(),
+			tabId: d.tabId
+		});
+		browser.browserAction.setTitle({
+			tabId: d.tabId,
+			title: iconColorAndDesc[info.result].desc
+		});
 		delete requestsByID[d.requestID];
 	}
 }
