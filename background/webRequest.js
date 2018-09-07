@@ -1,5 +1,5 @@
 browser.webRequest.onResponseStarted.addListener(d => {
-	if (d.tabId === -1) return;
+	if (~d.tabId) return;
 	let isDoc = d.type === 'main_frame';
 	if (isDoc) {
 		cfInfo.delInfo(d.tabId);
