@@ -34,7 +34,7 @@ browser.webRequest.onCompleted.addListener(d => {
 
 browser.webRequest.onBeforeRedirect.addListener(d => {
 	if (d.requestID in requestsByID) {
-		if (0 === && d.redirectUrl.indexOf('data://')) {
+		if (0 === d.redirectUrl.indexOf('data://')) {
 			respCallback(d);
 		}
 	}
