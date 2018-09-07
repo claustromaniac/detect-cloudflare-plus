@@ -1,7 +1,7 @@
 browser.storage.sync.get('paEnabled').then(res => {
 		paEnabled = res.paEnabled;
 	})
-	.catch((e) => { console.log(`Cloudflare-Detect: ${e}`); });
+	.catch((e) => { console.log(`Detect-Cloudflare-Plus: ${e}`); });
 
 browser.storage.onChanged.addListener(changes => {
 	paEnabled = changes.paEnabled.newValue;
@@ -14,4 +14,4 @@ browser.storage.onChanged.addListener(changes => {
 			browser.pageAction.hide(key);
 		});
 	}
-})
+});

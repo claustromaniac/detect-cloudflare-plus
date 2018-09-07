@@ -68,25 +68,23 @@ function updatePageAction(tabId, result) {
 }
 
 function respCallback(d) {
-	if (d.requestID in requestsByID) {
-		let info = cfInfo.getInfo(tabId);
-		if (!info.result) {
-			info.result = requestsByID[d.requestID];
-			updatePageAction(d.tabId, info.result);
-		}
-		// update badge
-		browser.browserAction.setBadgeBackgroundColor({
-			color: iconColorAndDesc[info.result].color,
-			tabId: d.tabId
-		});
-		browser.browserAction.setBadgeText({
-			text: info.badgeNum.toString(),
-			tabId: d.tabId
-		});
-		browser.browserAction.setTitle({
-			tabId: d.tabId,
-			title: iconColorAndDesc[info.result].desc
-		});
-		delete requestsByID[d.requestID];
+	let info = cfInfo.getInfo(d.tabId);
+	if (!info.result) {
+		info.result = requestsByID[d.requestID];
+		updatePageAction(d.tabId, info.result);
 	}
+	delete requestsByID[d.requestID];
+	// update badge
+	browser.browserAction.setBadgeBackgroundColor({
+		color: iconColorAndDesc[info.result].color,
+		tabId: d.tabId
+	});
+	browser.browserAction.setBadgeText({
+		text: info.badgeNum.toString(),
+		tabId: d.tabId
+	});
+	browser.browserAction.setTitle({
+		tabId: d.tabId,
+		title: iconColorAndDesc[info.result].desc
+	});
 }

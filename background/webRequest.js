@@ -1,5 +1,5 @@
 browser.webRequest.onResponseStarted.addListener(d => {
-	if (~d.tabId) return;
+	if (d.tabId === -1) return;
 	let isDoc = d.type === 'main_frame';
 	if (isDoc) {
 		cfInfo.delInfo(d.tabId);
@@ -21,15 +21,21 @@ browser.webRequest.onResponseStarted.addListener(d => {
 }, { urls: ["<all_urls>"] }, ["responseHeaders"]);
 
 browser.webRequest.onErrorOccurred.addListener(d => {
-	respCallback(d);
+	if (d.requestID in requestsByID) {
+		respCallback(d);
+	}
 }, { urls: ["<all_urls>"] });
 
 browser.webRequest.onCompleted.addListener(d => {
-	respCallback(d);
+	if (d.requestID in requestsByID) {
+		respCallback(d);
+	}
 }, { urls: ["<all_urls>"] });
 
 browser.webRequest.onBeforeRedirect.addListener(d => {
-	if (0 === d.redirectURL.indexOf('data://')) {
-		respCallback(d);
+	if (d.requestID in requestsByID) {
+		if (0 === && d.redirectUrl.indexOf('data://')) {
+			respCallback(d);
+		}
 	}
 }, { urls: ["<all_urls>"] });
