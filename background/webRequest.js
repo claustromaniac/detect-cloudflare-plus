@@ -16,7 +16,7 @@ browser.webRequest.onResponseStarted.addListener(d => {
 		}
 	}
 	if (badgeNum != info.badgeNum) {
-		requestsByID[d.requestID] = paEnabled ? (isDoc ? 2 : 1) : 0;
+		requestsByID[d.requestID] = isDoc ? 2 : 1;
 	}
 }, { urls: ["<all_urls>"] }, ["responseHeaders"]);
 

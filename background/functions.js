@@ -71,7 +71,7 @@ function respCallback(d) {
 	let info = cfInfo.getInfo(d.tabId);
 	if (!info.result) {
 		info.result = requestsByID[d.requestID];
-		updatePageAction(d.tabId, info.result);
+		if (paEnabled) updatePageAction(d.tabId, info.result);
 	}
 	delete requestsByID[d.requestID];
 	// update badge
