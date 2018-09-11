@@ -3,7 +3,8 @@ Detect Cloudflare+
 
 **https://addons.mozilla.org/firefox/addon/detect-cloudflare-plus/**
 
-This Firefox extension is an almost fully rewritten fork of [Detect Cloudflare](https://github.com/traktofon/cf-detect) by [traktofon](https://github.com/traktofon). It has the following differences (as of 2018-09-03):
+This Firefox extension is an almost fully rewritten fork of [Detect Cloudflare](https://github.com/traktofon/cf-detect) by [traktofon](https://github.com/traktofon). It has the following differences (as of 2018-09-11):
+- Identifies more Cloudflare response headers than the original.
 - Does not use the `onHeadersReceived` event from the [webRequest API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/) because multiple `onHeadersReceived` listeners [conflict with one another](https://github.com/ghacksuserjs/ghacks-user.js/issues/265), and this extension doesn't need to modify any headers to work, so it is not necessary.
 - Does not use the webNavigation API, so it doesn't need permissions for that.
 - Reports a more accurate number of requests. The original Detect Cloudflare extension usually reports a higher number of requests per domain, sometimes even twice as high. This is because `onHeadersReceived` doesn't necessarily trigger only once for each request, and the extension doesn't check the request IDs at any moment.
