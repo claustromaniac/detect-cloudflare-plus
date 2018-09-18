@@ -1,14 +1,9 @@
-var paEnabled;
-var cfInfo = new CFInfoByTab();
-var requestsByID = {};
+const settings = new Settings();
+const tabs = new Tabs();
+const requestIDs = {};
 const iconColorAndDesc = [
-	{ color: 'red', desc: 'Detect Cloudflare+' },
-	{ color: 'orange', desc: 'External resources were served by Cloudflare.' },
-	{ color: 'red', desc: 'This page was served by Cloudflare!' }
+	{ color: '', desc: 'True Sight' },
+	{ color: 'yellow', desc: 'External resources were served by a CDN.' },
+	{ color: 'red', desc: 'This page was served by a CDN!' },
+	{ color: 'purple', desc: 'The content in this page was served by more than one CDN!' }
 ];
-const cfHeaders = {
-	'cf-cache-status': true,
-	'cf-bgj': true,
-	'cf-polished': true,
-	'cf-ray': true
-};

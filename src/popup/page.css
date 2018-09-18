@@ -1,16 +1,27 @@
 body {
-	padding: 0em 1em;
 	background-color: #222;
 	color: #aaa;
-}
-
-p#status {
 	font-weight: bold;
+	padding: 0em 1em;
 }
 
 ul {
 	margin-top: -1ex;
 	padding-left: 1em;
+}
+
+h3 {
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+.external {
+	color: yellow;
+}
+.main {
+	color: red;
+}
+.none {
+	color: #08A;
 }
 
 .count {

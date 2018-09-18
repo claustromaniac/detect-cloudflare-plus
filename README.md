@@ -1,36 +1,78 @@
-Detect Cloudflare+
-------------------
+[**True Sight**][1]
+====================
 
-**https://addons.mozilla.org/firefox/addon/detect-cloudflare-plus/**
+*let it all be revealed...*
 
-This Firefox extension is an almost fully rewritten fork of [Detect Cloudflare](https://github.com/traktofon/cf-detect) by [traktofon](https://github.com/traktofon). It has the following differences (as of 2018-09-11):
-- Identifies more Cloudflare response headers than the original.
-- Does not use the `onHeadersReceived` event from the [webRequest API](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/) because multiple `onHeadersReceived` listeners [conflict with one another](https://github.com/ghacksuserjs/ghacks-user.js/issues/265), and this extension doesn't need to modify any headers to work, so it is not necessary.
-- Does not use the webNavigation API, so it doesn't need permissions for that.
-- Reports a more accurate number of requests. The original Detect Cloudflare extension usually reports a higher number of requests per domain, sometimes even twice as high. This is because `onHeadersReceived` doesn't necessarily trigger only once for each request, and the extension doesn't check the request IDs at any moment.
-- Uses the orange cloud as the default icon.
-- Shows the total number of responses served by Cloudflare in a badge on the toolbar icon.
-- Does not change the color of the toolbar icon. Instead, it changes the color of the badge.
-- Adds an optional page-action type of icon (that appears in the address bar). The color of this icon **does** change because it cannot have a badge.
-- Uses light text on dark background for the popup style.
-- Various performance optimizations and some very minor fixes.
+![badass cat iris](src/icons/eye.svg) ![badass cat iris](src/icons/eye-yellow.svg) ![badass cat iris](src/icons/eye-red.svg) ![badass cat iris](src/icons/eye-purple.svg)
 
-### Privacy
+This Firefox extension aims to expose today's most omnipresent agents in the Internet: *Content Delivery Networks (CDN)*. Nowadays, most of the global internet traffic goes through CDNs so seamlessly that the majority of the population never even finds out.
 
-This extension neither collects nor shares any kind of information whatsoever.
+These third parties are hired by website owners *(often for "free"!)*, and their role in this ecosystem is that of messengers. They have many eyes, many hands, and they are *everywhere*. Trying to avoid them completely is not really an option anymore. They're so widespread already, that one would have to actually stop using a huge chunk of the Internet entirely in order to steer clear of them.
 
-### Motivation
+**...but *that* doesn't mean what they do is OK now, does it?**
 
-Cloudflare is a content delivery network that provides useful services for servers, like caching, encryption and protection against DDoS attacks. It works as a [reverse proxy](https://en.wikipedia.org/wiki/Reverse_proxy): it sits between the servers and you, relaying all requests and responses.
+I will try my best not to preach... this time around. I don't want to tell you what to do, nor whom to trust. Your newfound True Sight power will - at best - bring you awareness, because I think you deserve to at least **know** when some giant corporate ninja is sitting between you and the real servers that you *try* to visit everyday. Use this power wisely.
 
-Cloudflare allows webmasters to choose how to handle the communication's encryption. Servers can choose not to serve anything over HTTPS, or they can choose to use strict HTTPS between server and browser. That's pretty normal, right? The problem is that **they also give servers the choice of encrypting the communication *only* between your browser and Cloudflare.**
+How does it work?
+-----------------
 
-You cannot trust the *S* in *HTTPS* when it is very likely that the encryption is getting dropped midway in the communication. Since there is no way for you to know what is going on with your traffic once it leaves your device, and since sites served by Cloudflare don't make that fact apparent in any way, the only sense of security you can get from HTTPS is a false one. You simply don't know what is really going on.
+### The toolbar icon:
 
-[Some people have argued](https://www.troyhunt.com/cloudflare-ssl-and-unhealthy-security-absolutism/) that it is better to have partial encryption than having no encryption at all, and **that** is the only reasonable argument in favor of Cloudflare that I have heard/read so far. The only problem with that argument is that - again - websites that use Cloudflare like this **don't make that fact apparent in any way**. Would you type in your credit card number if you knew that the communication is only encrypted between you and the man in the middle? I sure wouldn't.
+Displays a color-coded badge with the number of matching patterns. This number will typically be equivalent to the number of requests served by CDNs.
 
-And Cloudflare *is* a man in the middle. So, you can't have any guarantees regarding privacy either. Technically speaking, at any given time you can't even know whether or not the content you get in your browser is really the unaltered response from the server.
+YELLOW means that external resources were served by a CDN, but the page itself was not.
+RED means the page itself was served by a CDN, and maybe also external resources.
+PURPLE means that resources on that page were served by more than one CDN.
 
-This extension informs you of the presence of this intermediary, to give you an additional resource for judging whether to trust websites or not.
+### The address bar icon (optional):
 
-The internet has become more and more centralized over the years. Sadly, Cloudflare is not the only reverse proxy around, but it is a very major one, and it is relatively easy to detect (at least for now).
+Uses the same colors to represent the same information, except that it doesn't have a badge (because of API limitations). Instead, the color of the icon itself changes. This icon is only visible when relevant.
+
+### The popup:
+
+It is displayed when you click on one of the icons. It lists the domains of the resources that were served by CDNs, and the number of detected requests by domain.
+
+
+### The options:
+
+The options menu allows you to toggle detection of individual CDNs on or off.
+
+There is also an option to enable detection using **heuristic patterns**. Said patterns will sometimes detect CDNs that the extension doesn't allow to detect individually yet.
+
+Platforms detected (as of 2018-09-19):
+---------------------------------------
+
+- Cloudflare
+- Google Project Shield
+- Incapsula
+- KeyCDN
+- Sucuri
+
+There are dozens of CDNs out in the wild, so this list will definitely grow over time.
+
+Permissions requested
+---------------------
+
+*Access your data for all websites*
+- True Sight needs to analize the response headers of all requests to work, and there is no way to do that without asking for this permission.
+
+*Access browser tabs*
+- This one shouldn't be necessary (according to documentation) but, if I recall correctly, changing the address bar icon didn't seem to work without requesting this permission. Will probably check back, eventually.
+
+TODO
+----
+
+- Add patterns to detect a bunch more CDNs.
+- Improve existing patterns where possible.
+- Implement dynamic themes.
+- Improve the documentation.
+- Make the existing UI elements more visually appealing / useful. MAYBE.
+- Add some sort of accessibility option... **if** I can come up with something decent.
+
+Privacy
+--------
+
+This extension neither collects nor shares any kind of information whatsoever. See the full privacy policy on AMO if you need a slightly longer statement telling you the same.
+
+
+[1]: https://addons.mozilla.org/firefox/addon/detect-cloudflare-plus/

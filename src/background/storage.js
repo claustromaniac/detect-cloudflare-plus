@@ -1,17 +1,12 @@
-browser.storage.sync.get('paEnabled').then(res => {
-		paEnabled = res.paEnabled;
+browser.storage.sync.get(settings.all).then(r => {
+		'use strict';
+		settings.all = r;
+		settings.init();
+		browser.storage.sync.set(settings.all).then(() => {
+			browser.storage.onChanged.addListener(changes => {
+				settings.update(changes);
+				settings.init();
+			});
+		});
 	})
-	.catch((e) => { console.log(`Detect-Cloudflare-Plus: ${e}`); });
-
-browser.storage.onChanged.addListener(changes => {
-	paEnabled = changes.paEnabled.newValue;
-	if (paEnabled) {
-		cfInfo.info.forEach((val, key) => {
-			updatePageAction(key, val.result);
-		});
-	} else {
-		cfInfo.info.forEach((val, key) => {
-			browser.pageAction.hide(key);
-		});
-	}
-});
+	.catch((e) => { console.log(`True-Sight: ${e}`); });
