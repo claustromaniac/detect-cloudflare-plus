@@ -71,7 +71,7 @@ class Settings {
 			'paEnabled',
 			'heuristics',
 			'Cloudflare',
-			'Google Project Shield',
+			'GoogleProjectShield',
 			'Incapsula',
 			'KeyCDN',
 			'Sucuri'
