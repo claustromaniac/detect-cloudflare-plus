@@ -30,7 +30,16 @@ getTab.then(tabs => {
 function writeStatus(cdn, result) {
 	const st = document.createElement('h3');
 	st.setAttribute('class', statusType[result]);
-	st.textContent = result ? cdn : 'No CDNs detected.';
+	switch (result) {
+		case 1:
+			st.textContent = cdn + ' (3p)';
+			break;
+		case 2:
+			st.textContent = cdn + ' (1p)';
+			break;
+		default:
+			st.textContent = 'No CDNs detected.';
+	}
 	document.getElementById('top').appendChild(st);
 }
 
