@@ -3,7 +3,7 @@
 
 *let it all be revealed...*
 
-![badass cat iris](stuff/eye.gif)
+[![badass cat iris](stuff/eye.gif)](https://addons.mozilla.org/en-US/firefox/addon/detect-cloudflare-plus/)
 
 This Firefox extension aims to expose today's most omnipresent agents in the Internet: *Content Delivery Networks (CDN)*. Nowadays, most of the global internet traffic goes through CDNs so seamlessly that the majority of the population never even finds out.
 
