@@ -3,7 +3,7 @@
 
 *let it all be revealed...*
 
-![badass cat iris](src/icons/eye.svg) ![badass cat iris](src/icons/eye-yellow.svg) ![badass cat iris](src/icons/eye-red.svg) ![badass cat iris](src/icons/eye-purple.svg)
+![badass cat iris](stuff/eye.gif)
 
 This Firefox extension aims to expose today's most omnipresent agents in the Internet: *Content Delivery Networks (CDN)*. Nowadays, most of the global internet traffic goes through CDNs so seamlessly that the majority of the population never even finds out.
 
