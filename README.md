@@ -9,7 +9,7 @@ Never heard of CDN? As it turns out, most of the global internet traffic goes th
 
 **... but *that* shouldn't make them any more acceptable, in my humble opinion.**
 
-That being said, I don't want to tell you what to do, nor whom to trust. Your newfound True Sight power alone will not save you from anyone, but it will hopefully bring you awareness. I think we all deserve to at least **know** when some giant corporate ninja is sitting right between us and the real servers that we so innocently *try* to visit everyday. How you use this power is up to you.
+That being said, I don't want to tell you what to do, nor whom to trust. Your newfound True Sight power alone will not save you from anyone, but it will hopefully bring you awareness. I think we all deserve to at least **know** when some giant corporate ninja is sitting right between us and the real servers that we [so innocently *try* to visit][2] everyday. How you use this power is up to you.
 
 Read [the description on AMO][1] to learn more about how this extension works.
 
@@ -21,3 +21,4 @@ This extension neither collects nor shares any kind of information whatsoever. S
 
 
 [1]: https://addons.mozilla.org/firefox/addon/detect-cloudflare-plus/
+[2]: https://en.wikipedia.org/wiki/Reverse_proxy
