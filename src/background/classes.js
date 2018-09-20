@@ -66,23 +66,23 @@ class Settings {
 			'x-robots-tag': 1,
 			'x-xss-protection': 1
 		};
+		this.options = {
+			'paEnabled': true,
+			'heuristics': false,
+			'Akamai': true,
+			'AmazonCloudfront': true,
+			'Cloudflare': true,
+			'GoogleProjectShield': true,
+			'Incapsula': true,
+			'KeyCDN': true,
+			'Kinsta': true,
+			'MyraCloud': true,
+			'Sucuri': true
+		};
+		for (const i in this.options) {
+			this[i] = this.options[i];
+		}
 		this.patterns = {};
-		this.options = [
-			'paEnabled',
-			'heuristics',
-			'Cloudflare',
-			'GoogleProjectShield',
-			'Incapsula',
-			'KeyCDN',
-			'Sucuri'
-		];
-		this.paEnabled = true;
-		this.heuristics = false;
-		this.Cloudflare = true;
-		this.GoogleProjectShield = true;
-		this.Incapsula = true;
-		this.KeyCDN = true;
-		this.Sucuri = true;
 	}
 
 	registerPattern(cdn, pattern) {
@@ -93,41 +93,85 @@ class Settings {
 	init() {
 		this.patterns = {};
 
+		this.registerPattern('Akamai', {
+			'x-akamai-ssl-client-sid': () => { return 1 },
+			'x-akamai-transformed': () => { return 1 },
+			'x-cache-key': v => { return v },
+			'x-check-cacheable': v => { return (v == 'yes' || v == 'no') },
+			// 'server': v => { return ~v.indexOf('akamai') },
+			'set-cookie': v => {
+				return ~v.indexOf('akacd_') || ~v.indexOf('ak_bmsc');
+			}
+		});
+		this.registerPattern('AmazonCloudfront', {
+			'x-amz-cf-id': () => { return 1 },
+			'x-amz-replication-status': () => { return 1 },
+			'x-amz-version-id': () => { return 1 },
+			'x-cache': v => { return ~v.indexOf('cloudfront') },
+			'set-cookie': v => { return !v.indexOf('awsalb') },
+			'via': v => { return ~v.indexOf('cloudfront') }
+		});
 		this.registerPattern('Cloudflare', {
-				'cf-bgj': () => { return 1 },
-				'cf-cache-status': () => { return 1 },
-				'cf-polished': () => { return 1 },
-				'cf-ray': () => { return 1 },
-				'server': h => { return ~h.value.toLowerCase().indexOf('cloudflare') }
-			});
+			'cf-bgj': () => { return 1 },
+			'cf-cache-status': () => { return 1 },
+			'cf-polished': () => { return 1 },
+			'cf-ray': () => { return 1 },
+			'expect-ct': v => { return ~v.indexOf('report-uri.cloudflare.com') },
+			'server': v => { return ~v.indexOf('cloudflare') },
+			'set-cookie': v => { return ~v.indexOf('__cfduid') }
+		});
 		this.registerPattern('GoogleProjectShield', {
-				'server': h => { return h.value.toLowerCase() === 'shield' },
-				'x-shield-request-id': () => { return 1 }
-			});
+			'server': v => { return v == 'shield' },
+			'x-shield-request-id': () => { return 1 }
+		});
 		this.registerPattern('Incapsula', {
-				'x-iinfo': () => { return 1 },
-				'x-cdn': h => { return ~h.value.toLowerCase().indexOf('incapsula') },
-				'set-cookie': h => { return ~h.value.toLowerCase().indexOf('visid_incap_') }
-			});
+			'x-iinfo': () => { return 1 },
+			'x-cdn': v => { return ~v.indexOf('incapsula') },
+			'set-cookie': v => { return ~v.indexOf('visid_incap_') }
+		});
 		this.registerPattern('KeyCDN', {
-				'server': h => { return !h.value.toLowerCase().indexOf('keycdn') }
-			});
+			'server': v => { return !v.indexOf('keycdn') }
+		});
+		this.registerPattern('Kinsta', {
+			'x-cache': (v, obj) => {
+				if (!obj.Kinsta) obj.Kinsta = 0;
+				else return 1;
+			},
+			'x-edge-location': (v, obj) => {
+				if (!obj.Kinsta) obj.Kinsta = 0;
+				else return 1;
+			},
+			'x-kinsta-cache': () => { return 1 },
+			'server': (v, obj) => {
+				if (!v.indexOf('kinsta')) {
+					if (obj.hasOwnProperty('Kinsta')) return 1;
+					else obj.Kinsta = 1;
+				}
+			}
+		});
+		this.registerPattern('MyraCloud', {
+			'server': v => { return ~v.indexOf('myracloud') }
+		});
 		this.registerPattern('Sucuri', {
-				'x-sucuri-cache': () => { return 1 },
-				'x-sucuri-id': () => { return 1 },
-				'server': h => { return ~h.value.toLowerCase().indexOf('sucuri') },
-				'set-cookie': h => { return ~h.value.toLowerCase().indexOf('sucuri-') }
-			});
-
+			'x-sucuri-cache': () => { return 1 },
+			'x-sucuri-id': () => { return 1 },
+			'server': v => { return ~v.indexOf('sucuri') },
+			'set-cookie': v => { return ~v.indexOf('sucuri-') }
+		});
 
 		if (this.heuristics) {
 			this.hpatterns = {
-				// 'cache-control': () => { return 1 },
-				// ^ for testing only
-				'x-cache': () => { return 1 },
-				'x-cache-hits': () => { return 1 },
-				'x-served-by': () => { return 1 },
-				'x-edge-location': () => { return 1 }
+				'x-cache': 1,
+				'x-cache-hits': 1,
+				'x-cdn': 1,
+				'x-edge-location': 1,
+				'x-served-by': 1,
+				'x-varnish': 1,
+				'x-varnish-backend': 1,
+				'x-varnish-cache': 1,
+				'x-varnish-cache-hits': 1,
+				'x-varnish-cacheable': 1,
+				'x-varnish-host': 1
 			};
 		} else this.hpatterns = {};
 
@@ -143,14 +187,13 @@ class Settings {
 	get all() {
 		const val = {};
 		for (const i in this.options) {
-			const opt = this.options[i];
-			val[opt] = this[opt];
+			val[i] = this[i];
 		}
 		return val;
 	}
 	set all(obj) {
-		for (const p in obj) {
-			this[p] = obj[p];
+		for (const i in obj) {
+			this[i] = obj[i];
 		}
 	}
 	update(changes) {

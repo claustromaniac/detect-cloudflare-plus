@@ -4,13 +4,15 @@ browser.webRequest.onResponseStarted.addListener(d => {
 	let isDoc = d.type === 'main_frame';
 	if (isDoc) tabs.newInfo(d.tabId);
 	isDoc = isDoc ? 2 : 1;
+	const cObj = {}; // for complex patterns involving multiple headers
 	top:
 		for (const i in d.responseHeaders) {
-			const hn = d.responseHeaders[i].name.toLowerCase();
-			if (settings.ignore[hn]) continue;
+			const n = d.responseHeaders[i].name.toLowerCase();
+			if (settings.ignore[n]) continue;
+			const v = d.responseHeaders[i].value.toLowerCase();
 			for (const p in settings.patterns) {
-				if (settings.patterns[p][hn] &&
-					settings.patterns[p][hn](d.responseHeaders[i])) {
+				if (settings.patterns[p][n] &&
+					settings.patterns[p][n](v, cObj)) {
 					tabs[d.tabId].badgeNum++
 					tabs[d.tabId].result = isDoc;
 					tabs[d.tabId].cdn(p).inc(d.url);
@@ -19,8 +21,8 @@ browser.webRequest.onResponseStarted.addListener(d => {
 					break top;
 				}
 			}
-			if (settings.hpatterns[hn] &&
-				settings.hpatterns[hn](d.responseHeaders[i])) {
+			if (settings.hpatterns[n] /* &&
+				settings.hpatterns[n](v, cObj)*/ ) {
 				tabs[d.tabId].badgeNum++
 				tabs[d.tabId].result = isDoc;
 				tabs[d.tabId].cdn('Heuristic Detection').inc(d.url);
