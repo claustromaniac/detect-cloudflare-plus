@@ -11,7 +11,7 @@ Never heard of CDN? As it turns out, most of the global internet traffic goes th
 
 That being said, I don't want to tell you what to do, nor whom to trust. Your newfound True Sight power will not save you from anyone, but it will likely bring you awareness. I think we all deserve to at least **know** when some giant corporate ninja is sitting right between us and the real servers that we so innocently *try* to visit everyday. How you use this power is up to you.
 
-Read the description on AMO to learn more about how this extension works.
+Read [the description on AMO][1] to learn more about how this extension works.
 
 
 Privacy
