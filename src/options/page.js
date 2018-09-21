@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	}
 	document.querySelector("form").addEventListener("submit", e => {
 		'use strict';
-		let obj = {};
+		const obj = {};
 		for (const i of checkboxes) {
 			obj[i] = document.getElementById(i).checked;
 		}

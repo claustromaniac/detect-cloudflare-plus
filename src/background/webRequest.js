@@ -1,3 +1,12 @@
+const filter = { urls: ["<all_urls>"] };
+const callback = d => {
+	'use strict';
+	if (requestIDs[d.requestID]) {
+		requestIDs[d.requestID].updateUI();
+		delete requestIDs[d.requestID];
+	}
+};
+
 browser.webRequest.onResponseStarted.addListener(d => {
 	'use strict';
 	if (d.tabId === -1) return;
@@ -11,8 +20,7 @@ browser.webRequest.onResponseStarted.addListener(d => {
 			if (settings.ignore[n]) continue;
 			const v = d.responseHeaders[i].value.toLowerCase();
 			for (const p in settings.patterns) {
-				if (settings.patterns[p][n] &&
-					settings.patterns[p][n](v, cObj)) {
+				if (settings.patterns[p][n] && settings.patterns[p][n](v, cObj)) {
 					tabs[d.tabId].badgeNum++
 					tabs[d.tabId].result = isDoc;
 					tabs[d.tabId].cdn(p).inc(d.url);
@@ -21,8 +29,7 @@ browser.webRequest.onResponseStarted.addListener(d => {
 					break top;
 				}
 			}
-			if (settings.hpatterns[n] /* &&
-				settings.hpatterns[n](v, cObj)*/ ) {
+			if (settings.hpatterns[n] /* &&	settings.hpatterns[n](v, cObj)*/ ) {
 				tabs[d.tabId].badgeNum++
 				tabs[d.tabId].result = isDoc;
 				tabs[d.tabId].cdn('Heuristic Detection').inc(d.url);
@@ -30,30 +37,14 @@ browser.webRequest.onResponseStarted.addListener(d => {
 				requestIDs[d.requestID] = tabs[d.tabId];
 			}
 		}
-}, { urls: ["<all_urls>"] }, ["responseHeaders"]);
+}, filter, ["responseHeaders"]);
 
-browser.webRequest.onErrorOccurred.addListener(d => {
-	'use strict';
-	if (requestIDs[d.requestID]) {
-		requestIDs[d.requestID].updateUI();
-		delete requestIDs[d.requestID];
-	}
-}, { urls: ["<all_urls>"] });
-
-browser.webRequest.onCompleted.addListener(d => {
-	'use strict';
-	if (requestIDs[d.requestID]) {
-		requestIDs[d.requestID].updateUI();
-		delete requestIDs[d.requestID];
-	}
-}, { urls: ["<all_urls>"] });
-
+browser.webRequest.onErrorOccurred.addListener(callback(d), filter);
+browser.webRequest.onCompleted.addListener(callback(d), filter);
 browser.webRequest.onBeforeRedirect.addListener(d => {
 	'use strict';
-	if (requestIDs[d.requestID]) {
-		if (!d.redirectUrl.indexOf('data://')) {
-			requestIDs[d.requestID].updateUI();
-			delete requestIDs[d.requestID];
-		}
+	if (requestIDs[d.requestID] && !d.redirectUrl.indexOf('data://')) {
+		requestIDs[d.requestID].updateUI();
+		delete requestIDs[d.requestID];
 	}
-}, { urls: ["<all_urls>"] });
+}, filter);
