@@ -17,20 +17,20 @@ browser.webRequest.onResponseStarted.addListener(d => {
 	top:
 		for (const i in d.responseHeaders) {
 			const n = d.responseHeaders[i].name.toLowerCase();
-			if (settings.ignore[n]) continue;
-			const v = d.responseHeaders[i].value.toLowerCase();
-			for (const p in settings.patterns) {
-				if (settings.patterns[p][n] && settings.patterns[p][n](v, cObj)) {
-					tabs[d.tabId].badgeNum++
-					tabs[d.tabId].result = isDoc;
-					tabs[d.tabId].cdn(p).inc(d.url);
-					tabs[d.tabId].cdn(p).result = isDoc;
-					requestIDs[d.requestID] = tabs[d.tabId];
-					break top;
+			if (settings.patterns[n]) {
+				for (const func of settings.patterns[n]) {
+					if (const match = func(d.responseHeaders[i].value.toLowerCase(), cObj)) {
+						tabs[d.tabId].badgeNum++;
+						tabs[d.tabId].result = isDoc;
+						tabs[d.tabId].cdn(match).inc(d.url);
+						tabs[d.tabId].cdn(match).result = isDoc;
+						requestIDs[d.requestID] = tabs[d.tabId];
+						break top;
+					}
 				}
 			}
 			if (settings.hpatterns[n] /* &&	settings.hpatterns[n](v, cObj)*/ ) {
-				tabs[d.tabId].badgeNum++
+				tabs[d.tabId].badgeNum++;
 				tabs[d.tabId].result = isDoc;
 				tabs[d.tabId].cdn('Heuristic Detection').inc(d.url);
 				tabs[d.tabId].cdn('Heuristic Detection').result = isDoc;
@@ -39,8 +39,8 @@ browser.webRequest.onResponseStarted.addListener(d => {
 		}
 }, filter, ["responseHeaders"]);
 
-browser.webRequest.onErrorOccurred.addListener(callback(d), filter);
-browser.webRequest.onCompleted.addListener(callback(d), filter);
+browser.webRequest.onErrorOccurred.addListener(callback, filter);
+browser.webRequest.onCompleted.addListener(callback, filter);
 browser.webRequest.onBeforeRedirect.addListener(d => {
 	'use strict';
 	if (requestIDs[d.requestID] && !d.redirectUrl.indexOf('data://')) {

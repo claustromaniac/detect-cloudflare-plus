@@ -1,32 +1,17 @@
-const checkboxes = [
-	'paEnabled',
-	'heuristics',
-	'Akamai',
-	'AmazonCloudfront',
-	'Cloudflare',
-	'GoogleProjectShield',
-	'Incapsula',
-	'KeyCDN',
-	'Kinsta',
-	'MyraCloud',
-	'Sucuri'
-];
-
 document.addEventListener('DOMContentLoaded', () => {
 	'use strict';
-	for (const i of checkboxes) {
-		browser.storage.sync.get(i).then(r => {
-			document.getElementById(i).checked = !!r[i];
-		});
-	}
-	document.querySelector("form").addEventListener("submit", e => {
-		'use strict';
-		const obj = {};
-		for (const i of checkboxes) {
-			obj[i] = document.getElementById(i).checked;
+	browser.runtime.getBackgroundPage().then(bg => {
+		const options = Object.keys(bg.settings.defaults);
+		for (const i of options) {
+			document.getElementById(i).checked = bg.settings[i];
 		}
-		browser.storage.sync.set(obj);
-		e.preventDefault();
+		document.querySelector("form").addEventListener("submit", e => {
+			'use strict';
+			const obj = {};
+			for (const i of options) obj[i] = document.getElementById(i).checked;
+			browser.storage.sync.set(obj);
+			bg.settings.all = obj;
+			e.preventDefault();
+		});
 	});
 });
-
