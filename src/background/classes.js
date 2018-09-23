@@ -14,6 +14,7 @@ class Settings {
 		this.defaults = {
 			'paEnabled': true,
 			'heuristics': false,
+			'lazy': false,
 			'Akamai': true,
 			'AmazonCloudfront': true,
 			'Cloudflare': true,
@@ -163,7 +164,7 @@ class TabInfo {
 		this.changed = false;
 		this.id = id;
 		this.status = 0;
-		// this.windowID = winID;
+		this.total = 0;
 	}
 	set result(val) {
 		if (this.status < val) {
