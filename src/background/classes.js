@@ -41,7 +41,6 @@ class Settings {
 			this[i] = obj[i];
 		}
 
-		this.ignore = {};
 		this.patterns = {};
 		this.hpatterns = {};
 		const reg = (h, func) => {
@@ -144,17 +143,12 @@ class Settings {
 class CDNInfo {
 	constructor(dom, count) {
 		this.counters = new Map();
-		this.status = 0;
 	}
 	inc(url) {
 		const domain = (new URL(url)).hostname;
 		if (!this.counters.has(domain)) this.counters.set(domain, 1);
 		else this.counters.set(domain, (this.counters.get(domain) + 1));
 	}
-	set result(val) {
-		if (this.status < val) return this.status = val;
-	}
-	get result() { return this.status; }
 }
 
 class TabInfo {
@@ -162,6 +156,7 @@ class TabInfo {
 		this.badgeNum = 0;
 		this.cdns = {};
 		this.changed = false;
+		this.docs = {};
 		this.id = id;
 		this.status = 0;
 		this.total = 0;
@@ -217,8 +212,9 @@ class TabInfo {
 }
 
 class Tabs {
-	newInfo(id) {
-		return this[id] = new TabInfo(id);
+	getInfo(id) {
+		if (this[id]) return this[id];
+		else return this[id] = new TabInfo(id);
 	}
 	togglePageActions(bool) {
 		for (const i in this) {
@@ -231,15 +227,6 @@ class Tabs {
 		const result = {};
 		for (const i in this[id].cdns) {
 			result[i] = misc.map2obj(this[id].cdns[i].counters);
-		}
-		return result;
-	}
-	getTabResults(id) {
-		// get all individual results for a given tab
-		if (!this[id]) return;
-		const result = {};
-		for (const i in this[id].cdns) {
-			result[i] = this[id].cdns[i].result;
 		}
 		return result;
 	}

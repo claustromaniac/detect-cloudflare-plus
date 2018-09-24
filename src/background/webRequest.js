@@ -1,21 +1,16 @@
-const filter = { urls: ["<all_urls>"] };
-const callback = d => {
-	'use strict';
-	if (requestIDs[d.requestID]) {
-		tabs[d.tabId].badgeNum++;
-		requestIDs[d.requestID].updateUI();
-		delete requestIDs[d.requestID];
-	}
-};
-
-browser.webRequest.onResponseStarted.addListener(d => {
+const cb = d => {
 	'use strict';
 	if (d.tabId === -1) return;
 	let isDoc = d.type === 'main_frame';
-	if (isDoc) tabs.newInfo(d.tabId);
-	isDoc = isDoc ? 2 : 1;
-	tabs[d.tabId].total++;
+	if (isDoc) {
+		if (requestIDs[d.requestId]) delete requestIDs[d.requestId];
+		else delete tabs[d.tabId];
+		if (d.redirectUrl && d.redirectUrl.indexOf('data://')) requestIDs[d.requestId] = 1;
+	}
+	tabs.getInfo(d.tabId).total++;
+	const result = isDoc ? 2 : 1;
 	const cObj = {}; // for complex patterns involving multiple headers
+	const matched = {};
 	top:
 		for (const i in d.responseHeaders) {
 			const n = d.responseHeaders[i].name.toLowerCase();
@@ -23,31 +18,34 @@ browser.webRequest.onResponseStarted.addListener(d => {
 				const v = d.responseHeaders[i].value.toLowerCase();
 				for (const func of settings.patterns[n]) {
 					const match = func(v, cObj);
-					if (match) {
-						tabs[d.tabId].result = isDoc;
+					if (match && !matched[match]) {
+						matched[match] = 1;
+						if (isDoc) {
+							tabs[d.tabId].docs[(new URL(d.url)).hostname] = requestIDs[d.requestId] ? 2 : 1;
+						}
 						tabs[d.tabId].cdn(match).inc(d.url);
-						tabs[d.tabId].cdn(match).result = isDoc;
-						requestIDs[d.requestID] = tabs[d.tabId];
+						tabs[d.tabId].result = result;
 						if (settings.lazy) break top;
 					}
 				}
 			}
-			if (settings.hpatterns[n]) {
-				tabs[d.tabId].result = isDoc;
+			if (settings.hpatterns[n] && !matched['heuristics']) {
+				matched['heuristics'] = 1
+				if (isDoc) {
+					tabs[d.tabId].docs[(new URL(d.url)).hostname] = requestIDs[d.requestId] ? 2 : 1;
+				}
 				tabs[d.tabId].cdn('Heuristic Detection').inc(d.url);
-				tabs[d.tabId].cdn('Heuristic Detection').result = isDoc;
-				requestIDs[d.requestID] = tabs[d.tabId];
+				tabs[d.tabId].result = result;
 			}
 		}
-}, filter, ["responseHeaders"]);
-
-browser.webRequest.onErrorOccurred.addListener(callback, filter);
-browser.webRequest.onCompleted.addListener(callback, filter);
-browser.webRequest.onBeforeRedirect.addListener(d => {
-	'use strict';
-	if (requestIDs[d.requestID] && !d.redirectUrl.indexOf('data://')) {
+	if (Object.keys(matched).length) {
 		tabs[d.tabId].badgeNum++;
-		requestIDs[d.requestID].updateUI();
-		delete requestIDs[d.requestID];
+		if (!requestIDs[d.requestId]) tabs[d.tabId].updateUI();
 	}
+};
+
+browser.webRequest.onErrorOccurred.addListener(d => {
+	if (requestIDs[d.requestId]) delete requestIDs[d.requestId];
 }, filter);
+browser.webRequest.onCompleted.addListener(cb, filter, extraInfo);
+browser.webRequest.onBeforeRedirect.addListener(cb, filter, extraInfo);

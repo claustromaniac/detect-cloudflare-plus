@@ -1,68 +1,62 @@
-const statusType = [
-	'none',
-	'external',
-	'main'
-];
-
-var getTab = browser.tabs.query({
-	active: true,
-	currentWindow: true
-});
-
-getTab.then(tabs => {
+browser.tabs.query({active: true, currentWindow: true}).then(tabs => {
 		'use strict';
 		const port = browser.runtime.connect();
 		port.postMessage(tabs[0].id);
 		port.onMessage.addListener(msg => {
 			port.disconnect();
+			const sum = document.getElementById('sum');
+			sum.textContent = msg.badgeNum.toString();
+			append(sum, 'span', 'tooltiptext', 'requests to CDNs');
+			const total = document.getElementById('total');
+			total.textContent = msg.total.toString();
+			append(total, 'span', 'tooltiptext', 'total requests');
 			let sthDetected;
 			for (const i in msg.counters) {
-				sthDetected = populatePopup(i, msg.results[i], msg.counters[i]) || sthDetected;
+				sthDetected = populatePopup(i, msg) || sthDetected;
 			}
-			if (!sthDetected) writeStatus('', 0);
+			if (!sthDetected) append(0, 'p', 'none', 'No CDNs detected');
 		});
 	})
 	.catch(e => {
-		writeStatus('', 0);
+		append(0, 'p', 'none', 'No CDNs detected');
 		console.log(`True-Sight: ${e}`);
 	});
 
-function writeStatus(cdn, result) {
-	const st = document.createElement('h3');
-	st.setAttribute('class', statusType[result]);
-	switch (result) {
-		case 1:
-			st.textContent = cdn + ' (3p)';
-			break;
-		case 2:
-			st.textContent = cdn + ' (1p)';
-			break;
-		default:
-			st.textContent = 'No CDNs detected.';
-	}
-	document.getElementById('top').appendChild(st);
+function append(target, type, clazz, text) {
+// Cuz I'm a clazzy cat, and I'm proudz of it.
+	let ele;
+	if (type) {
+		ele = document.createElement(type);
+		if (clazz) ele.setAttribute('class', clazz);
+		if (text) ele.textContent = text;
+	} else ele = document.createTextNode(text);
+	return target ? target.appendChild(ele) : document.body.appendChild(ele);
 }
 
-function populatePopup(cdn, result, domainCounts) {
-	let ndomain = 0;
+function populatePopup(cdn, msg) {
 	const ul = document.createElement('ul');
-	for (var domain in domainCounts) {
-		if (!domainCounts.hasOwnProperty(domain)) continue;
-		++ndomain;
+	for (const domain in msg.counters[cdn]) {
 		var li = document.createElement('li');
-		var text = document.createTextNode(`${domain}: `);
-		var span = document.createElement('span');
-		span.setAttribute('class', 'count');
-		span.textContent = `${domainCounts[domain]}`;
-		li.appendChild(text);
-		li.appendChild(span);
+		append(li, 0, 0, `${domain}: `);
+		switch (msg.docs[domain]) {
+			case 1:
+				li.setAttribute('class', 'main');
+				append(li, 'span', 'count', `${msg.counters[cdn][domain]}`);
+				break;
+			case 2:
+				li.setAttribute('class', 'redirect');
+				append(li, 'span', 'count', `${msg.counters[cdn][domain]} (redirect)`);
+				break;
+			default:
+				li.setAttribute('class', 'external');
+				append(li, 'span', 'count', `${msg.counters[cdn][domain]}`);
+		}
 		ul.appendChild(li);
 	}
-	if (ndomain) {
-		writeStatus(cdn, result);
-		let top = document.getElementById('top');
-		top.appendChild(ul);
-		top.appendChild(document.createElement('br'));
+	if (li) {
+		append(0, 'p', 'cdn', cdn);
+		document.body.appendChild(ul);
+		document.body.appendChild(document.createElement('br'));
 		return true;
 	}
 }
