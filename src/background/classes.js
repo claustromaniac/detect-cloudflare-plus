@@ -15,6 +15,7 @@ class Settings {
 			'paEnabled': true,
 			'heuristics': false,
 			'lazy': false,
+
 			'Akamai': true,
 			'AmazonCloudfront': true,
 			'Cloudflare': true,
@@ -23,7 +24,8 @@ class Settings {
 			'KeyCDN': true,
 			'Kinsta': true,
 			'MyraCloud': true,
-			'Sucuri': true
+			'Sucuri': true,
+			'Tor2web': true
 		};
 		for (const i in this.defaults) this[i] = this.defaults[i];
 	}
@@ -116,6 +118,9 @@ class Settings {
 			reg('x-sucuri-id', () => {return n});
 			reg('server', v => {if (~v.indexOf('sucuri')) return n});
 			reg('set-cookie', v => {if (~v.indexOf('sucuri-')) return n});
+		}
+		if (this.Tor2web) {
+			reg('x-check-tor', () => {return 'Tor2web'});
 		}
 
 		if (this.heuristics) {
