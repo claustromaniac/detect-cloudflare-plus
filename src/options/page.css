@@ -3,3 +3,36 @@ body {
 	font-weight: bold;
 	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
+div {
+	margin-right: 5px;
+}
+div.fs {
+	display: flex;
+}
+footer {
+	float: right;
+}
+.tooltip {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+	color: #FFF;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	background-color: #444;
+	font-size: small;
+    visibility: hidden;
+    width: 200px;
+    text-align: center;
+    padding: 5px;
+    border-radius: 6px;
+
+    position: absolute;
+    z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+}

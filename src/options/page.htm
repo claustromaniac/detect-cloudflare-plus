@@ -9,47 +9,74 @@
 
 <body>
 	<form>
-		<fieldset>
-			<legend>
-				<h3>General</h3>
-			</legend>
-			<p>
-				<input id="paEnabled" type="checkbox">
-				<label for="paEnabled"> use address bar icon </label><br>
-				<input id="heuristics" type="checkbox">
-				<label for="heuristics"> enable heuristic detection </label><br>
-				<input id="lazy" type="checkbox">
-				<label for="lazy"> enable lazy mode </label><br>
-			</p>
-		</fieldset><br>
-		<fieldset>
-			<legend>
-				<h3>CDNs</h3>
-			</legend>
-			<p>
-				<input id="Akamai" type="checkbox">
-				<label for="Akamai"> Akamai </label><br>
-				<input id="AmazonCloudfront" type="checkbox">
-				<label for="AmazonCloudfront"> Amazon Cloudfront </label><br>
-				<input id="Cloudflare" type="checkbox">
-				<label for="Cloudflare"> Cloudflare </label><br>
-				<input id="GoogleProjectShield" type="checkbox">
-				<label for="GoogleProjectShield"> Google Project Shield </label><br>
-				<input id="Incapsula" type="checkbox">
-				<label for="Incapsula"> Incapsula </label><br>
-				<input id="KeyCDN" type="checkbox">
-				<label for="KeyCDN"> KeyCDN </label><br>
-				<input id="Kinsta" type="checkbox">
-				<label for="Kinsta"> Kinsta </label><br>
-				<input id="MyraCloud" type="checkbox">
-				<label for="MyraCloud"> MyraCloud </label><br>
-				<input id="Sucuri" type="checkbox">
-				<label for="Sucuri"> Sucuri </label><br>
-			</p>
-		</fieldset><br>
-		<br><button type="submit">Save</button>
+		<div>
+			<div class="fs">
+				<div>
+					<fieldset>
+						<legend>
+							<h3>General</h3>
+						</legend>
+						<input id="paEnabled" type="checkbox">
+						<label for="paEnabled"> use address bar icon </label><br>
+						<div class="fs">
+							<div>
+								<input id="heuristics" type="checkbox">
+								<label for="heuristics"> enable heuristic detection </label><br>
+							</div>
+							<div class="tooltip">[?]
+								<div class="tooltiptext">
+									If enabled, True Sight will detect custom headers and patterns commonly used by reverse proxy software.
+								</div>
+							</div>
+						</div>
+						<div class="fs">
+							<div>
+								<input id="lazy" type="checkbox">
+								<label for="lazy"> enable lazy mode </label><br>
+							</div>
+							<div class="tooltip">[?]
+								<div class="tooltiptext">
+									Lazy mode makes the extension stop parsing response headers for a given request as soon as it finds one match. This is usually OK because most origin servers probably don't use a multi-layered CDN setup. Enabling this is not necessary unless you experience significant performance drops.
+								</div>
+							</div>
+						</div>
+					</fieldset><br>
+				</div>
+				<div>
+					<fieldset>
+						<legend>
+							<h3>CDN</h3>
+						</legend>
+						<p>
+							<input id="Akamai" type="checkbox">
+							<label for="Akamai"> Akamai </label><br>
+							<input id="AmazonCloudfront" type="checkbox">
+							<label for="AmazonCloudfront"> Amazon Cloudfront </label><br>
+							<input id="Cloudflare" type="checkbox">
+							<label for="Cloudflare"> Cloudflare </label><br>
+							<input id="GoogleProjectShield" type="checkbox">
+							<label for="GoogleProjectShield"> Google Project Shield </label><br>
+							<input id="Incapsula" type="checkbox">
+							<label for="Incapsula"> Incapsula </label><br>
+							<input id="KeyCDN" type="checkbox">
+							<label for="KeyCDN"> KeyCDN </label><br>
+							<input id="Kinsta" type="checkbox">
+							<label for="Kinsta"> Kinsta </label><br>
+							<input id="MyraCloud" type="checkbox">
+							<label for="MyraCloud"> MyraCloud </label><br>
+							<input id="Sucuri" type="checkbox">
+							<label for="Sucuri"> Sucuri </label><br>
+						</p>
+					</fieldset><br>
+				</div>
+			</div>
+			<br><button type="submit">Save</button>
+		</div>
 	</form>
 	<script src="page.js"></script>
+	<footer>
+		[<a href="https://github.com/claustromaniac/detect-cloudflare-plus/issues">Support</a>]
+	</footer>
 </body>
 
 </html>
