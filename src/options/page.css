@@ -1,7 +1,13 @@
 body {
 	color: black;
-	font-weight: bold;
+}
+label {
 	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+}
+legend {
+	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
+	font-weight: bold;
+	font-size: 120%;
 }
 div {
 	margin-right: 5px;
@@ -10,9 +16,12 @@ div.fs {
 	display: flex;
 }
 footer {
-	float: right;
+	width: 100%;
+	border-top-style: double;
+	margin-top: 30px;
 }
 .tooltip {
+	color: #08A;
     position: relative;
     display: inline-block;
     border-bottom: 1px dotted black;
@@ -20,7 +29,6 @@ footer {
 
 .tooltip .tooltiptext {
 	color: #FFF;
-	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 	background-color: #444;
 	font-size: small;
     visibility: hidden;
