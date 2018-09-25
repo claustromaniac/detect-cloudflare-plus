@@ -1,7 +1,7 @@
 const cb = d => {
 	'use strict';
 	if (d.tabId === -1) return;
-	let isDoc = d.type === 'main_frame';
+	const isDoc = d.type === 'main_frame';
 	if (isDoc) {
 		if (requestIDs[d.requestId]) delete requestIDs[d.requestId];
 		else delete tabs[d.tabId];

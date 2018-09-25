@@ -19,6 +19,8 @@ class Settings {
 			'Akamai': true,
 			'AmazonCloudfront': true,
 			'Cloudflare': true,
+			'Fastly': true,
+			'GoogleCloud': true,
 			'GoogleProjectShield': true,
 			'Incapsula': true,
 			'KeyCDN': true,
@@ -56,7 +58,7 @@ class Settings {
 			reg('x-akamai-transformed', () => {return n});
 			reg('x-cache-key', v => {if (v) return n});
 			reg('x-check-cacheable', v => {if (v == 'yes' || v == 'no') return n});
-			// reg('server', v => {if (~v.indexOf('akamai')) return n});
+			reg('server', v => {if (~v.indexOf('akamai')) return n});
 			reg('set-cookie', v => {if (~v.indexOf('akacd_') || ~v.indexOf('ak_bmsc')) return n});
 		}
 		if (this.AmazonCloudfront) {
@@ -77,6 +79,40 @@ class Settings {
 			reg('expect-ct', v => {if (~v.indexOf('report-uri.cloudflare.com')) return n});
 			reg('server', v => {if (~v.indexOf('cloudflare')) return n});
 			reg('set-cookie', v => {if (~v.indexOf('__cfduid')) return n});
+		}
+		if (this.Fastly) {
+			const n = 'Fastly';
+			reg('fastly-stats', () => {return n});
+			reg('fastly-io-info', () => {return n});
+			reg('x-timer', v => {
+				const rx = /s\d+\.\d+,vs0,vs\d+/;
+				if (rx.test(v)) return n;
+			});
+			reg('server', v => {if (!v.indexOf('artisanal bits')) return n});
+			reg('vary', v => {if (~v.indexOf('fastly-ssl')) return n});
+		}
+/* 		if (this.GoogleAMP) {
+			const n = 'GoogleAMP';
+			reg('content-security-policy', v => {
+				if (~v.indexOf('cdn.ampproject.org') ||
+					~v.indexOf('https://csp-collector.appspot.com/csp/amp')) {
+						return n;
+				}
+			});
+		} */
+		if (this.GoogleCloud) {
+			const n = 'GoogleCloud';
+			reg('x-goog-component-count', () => {return n});
+			reg('x-goog-encryption-algorithm', () => {return n});
+			reg('x-goog-encryption-key-sha256', () => {return n});
+			reg('x-goog-expiration', () => {return n});
+			reg('x-goog-generation', () => {return n});
+			reg('x-goog-hash', () => {return n});
+			reg('x-goog-metageneration', () => {return n});
+			reg('x-goog-storage-class', () => {return n});
+			reg('x-goog-stored-content-encoding', () => {return n});
+			reg('x-goog-stored-content-length', () => {return n});
+			reg('x-guploader-uploadid', () => {return n});
 		}
 		if (this.GoogleProjectShield) {
 			reg('server', v => {if (v == 'shield') return 'GoogleProjectShield'});
@@ -129,6 +165,12 @@ class Settings {
 				'x-cache-hits': 1,
 				'x-cdn': 1,
 				'x-edge-location': 1,
+				'x-geo-city': 1,
+				'x-geo-country': 1,
+				'x-geo-ipaddr': 1,
+				'x-geo-ip': 1,
+				'x-geo-lat': 1,
+				'x-geo-lon': 1,
 				'x-served-by': 1,
 				'x-varnish': 1,
 				'x-varnish-backend': 1,
