@@ -8,7 +8,6 @@ class misc {
 
 class Settings {
 	constructor() {
-		this.ignore = {};
 		this.patterns = {};
 		this.hpatterns = {};
 		this.defaults = {
@@ -23,11 +22,17 @@ class Settings {
 			'GoogleCloud': true,
 			'GoogleProjectShield': true,
 			'Incapsula': true,
+			'Instart': true,
+			'IPFS': true,
 			'KeyCDN': true,
 			'Kinsta': true,
+			'Leaseweb': true,
 			'MyraCloud': true,
+			'Netlify': true,
+			'SingularCDN': true,
 			'Sucuri': true,
-			'Tor2web': true
+			'Tor2web': true,
+			'Zenedge': true
 		};
 		for (const i in this.defaults) this[i] = this.defaults[i];
 	}
@@ -54,42 +59,48 @@ class Settings {
 
 		if (this.Akamai) {
 			const n = 'Akamai';
-			reg('x-akamai-ssl-client-sid', () => {return n});
-			reg('x-akamai-transformed', () => {return n});
+			const simple = () => {return n};
+			reg('server', v => {if (~v.indexOf('akamai')) return n});
+			reg('set-cookie', v => {if (~v.indexOf('akacd_') || ~v.indexOf('aka_a2')) return n});
+			reg('x-akamai-session-info', simple);
+			reg('x-akamai-ssl-client-sid', simple);
+			reg('x-akamai-transformed', simple);
 			reg('x-cache-key', v => {if (v) return n});
 			reg('x-check-cacheable', v => {if (v == 'yes' || v == 'no') return n});
-			reg('server', v => {if (~v.indexOf('akamai')) return n});
-			reg('set-cookie', v => {if (~v.indexOf('akacd_') || ~v.indexOf('ak_bmsc')) return n});
 		}
 		if (this.AmazonCloudfront) {
-			const n = 'AmazonCloudfront';
-			reg('x-amz-cf-id', () => {return n});
-			reg('x-amz-replication-status', () => {return n});
-			reg('x-amz-version-id', () => {return n});
+			const n = 'Amazon Cloudfront';
+			const simple = () => {return n};
+			reg('x-amz-cf-id', simple);
+			reg('x-amz-id-2', simple);
+			reg('x-amz-replication-status', simple);
+			reg('x-amz-request-id', simple);
+			reg('x-amz-version-id', simple);
 			reg('x-cache', v => {if (~v.indexOf('cloudfront')) return n});
 			reg('set-cookie', v => {if (!v.indexOf('awsalb')) return n});
 			reg('via', v => {if (~v.indexOf('cloudfront')) return n});
 		}
 		if (this.Cloudflare) {
 			const n = 'Cloudflare';
-			reg('cf-bgj', () => {return n});
-			reg('cf-cache-status', () => {return n});
-			reg('cf-polished', () => {return n});
-			reg('cf-ray', () => {return n});
+			const simple = () => {return n};
+			reg('cf-bgj', simple);
+			reg('cf-cache-status', simple);
+			reg('cf-polished', simple);
+			reg('cf-ray', simple);
 			reg('expect-ct', v => {if (~v.indexOf('report-uri.cloudflare.com')) return n});
 			reg('server', v => {if (~v.indexOf('cloudflare')) return n});
 			reg('set-cookie', v => {if (~v.indexOf('__cfduid')) return n});
 		}
 		if (this.Fastly) {
 			const n = 'Fastly';
-			reg('fastly-stats', () => {return n});
-			reg('fastly-io-info', () => {return n});
-			reg('x-timer', v => {
-				const rx = /s\d+\.\d+,vs0,vs\d+/;
-				if (rx.test(v)) return n;
-			});
-			reg('server', v => {if (!v.indexOf('artisanal bits')) return n});
+			const simple = () => {return n};
+			const rx = /^s\d+\.\d+,vs0,ve\d+$/;
+			reg('fastly-stats', simple);
+			reg('fastly-io-info', simple);
+			reg('fastly-restarts', simple);
+			reg('server', v => {if (v === 'artisanal bits') return n});
 			reg('vary', v => {if (~v.indexOf('fastly-ssl')) return n});
+			reg('x-timer', v => {if (rx.test(v)) return n});
 		}
 /* 		if (this.GoogleAMP) {
 			const n = 'GoogleAMP';
@@ -101,34 +112,58 @@ class Settings {
 			});
 		} */
 		if (this.GoogleCloud) {
-			const n = 'GoogleCloud';
-			reg('x-goog-component-count', () => {return n});
-			reg('x-goog-encryption-algorithm', () => {return n});
-			reg('x-goog-encryption-key-sha256', () => {return n});
-			reg('x-goog-expiration', () => {return n});
-			reg('x-goog-generation', () => {return n});
-			reg('x-goog-hash', () => {return n});
-			reg('x-goog-metageneration', () => {return n});
-			reg('x-goog-storage-class', () => {return n});
-			reg('x-goog-stored-content-encoding', () => {return n});
-			reg('x-goog-stored-content-length', () => {return n});
-			reg('x-guploader-uploadid', () => {return n});
+			const n = 'Google Cloud';
+			const simple = () => {return n};
+			reg('server', v => {if (v === 'google frontend') return n});
+			reg('x-cloud-trace-context', simple);
+			reg('x-goog-component-count', simple);
+			reg('x-goog-encryption-algorithm', simple);
+			reg('x-goog-encryption-key-sha256', simple);
+			reg('x-goog-expiration', simple);
+			reg('x-goog-generation', simple);
+			reg('x-goog-hash', simple);
+			reg('x-goog-metageneration', simple);
+			reg('x-goog-storage-class', simple);
+			reg('x-goog-stored-content-encoding', simple);
+			reg('x-goog-stored-content-length', simple);
+			reg('x-guploader-uploadid', simple);
 		}
 		if (this.GoogleProjectShield) {
-			reg('server', v => {if (v == 'shield') return 'GoogleProjectShield'});
-			reg('x-shield-request-id', () => {return 'GoogleProjectShield'});
+			reg('server', v => {if (v === 'shield') return 'Google Project Shield'});
+			reg('x-shield-request-id', () => {return 'Google Project Shield'});
 		}
 		if (this.Incapsula) {
 			const n = 'Incapsula';
-			reg('x-iinfo', () => {return n});
-			reg('x-cdn', v => {if (~v.indexOf('incapsula')) return n});
 			reg('set-cookie', v => {if (~v.indexOf('visid_incap_')) return n});
+			reg('x-cdn', v => {if (~v.indexOf('incapsula')) return n});
+			reg('x-iinfo', () => {return n});
+		}
+		if (this.Instart) {
+			const n = 'Instart';
+			const simple = () => {return 'Instart'};
+			reg('x-instart-streaming', simple);
+			reg('x-instart-cache-id', simple);
+			reg('x-instart-ip-classification', simple);
+			reg('x-instart-ip-score', simple);
+			reg('x-instart-network-lists', simple);
+			reg('x-instart-request-id', simple);
+		}
+		if (this.IPFS) {
+			const simple = () => {return 'IPFS'};
+			reg('x-ipfs-path', simple);
+			reg('x-ipfs-pop', simple);
 		}
 		if (this.KeyCDN) {
 			reg('server', v => {if (!v.indexOf('keycdn')) return 'KeyCDN'});
 		}
 		if (this.Kinsta) {
 			const n = 'Kinsta';
+			reg('server', (v, obj) => {
+				if (!v.indexOf('kinsta')) {
+					if (obj.hasOwnProperty('Kinsta')) return n;
+					else obj.Kinsta = 1;
+				}
+			});
 			reg('x-cache', (v, obj) => {
 				if (!obj.Kinsta) obj.Kinsta = 0;
 				else return n;
@@ -138,46 +173,69 @@ class Settings {
 				else return n;
 			});
 			reg('x-kinsta-cache', () => {return n});
-			reg('server', (v, obj) => {
-				if (!v.indexOf('kinsta')) {
-					if (obj.hasOwnProperty('Kinsta')) return n;
-					else obj.Kinsta = 1;
-				}
-			});
+		}
+		if (this.Leaseweb) {
+			const n = 'Leaseweb';
+			const simple = () => {return n};
+			const rx = /^web\d+/;
+			reg('server', v => {if (!v.indexOf('leasewebcdn')) return n});
+			reg('lswcdn-country-code', simple);
+			reg('x-served-by', v => {if (rx.test(v)) return n});
 		}
 		if (this.MyraCloud) {
 			reg('server', v => {if (~v.indexOf('myracloud')) return 'MyraCloud'});
 		}
+		if (this.Netlify) {
+			reg('server', v => {if (!v.indexOf('netlify')) return 'Netlify'});
+			reg('x-nf-request-id', () => { return 'Netlify'});
+		}
+		if (this.SingularCDN) {
+			reg('server', v => {if (!v.indexOf('singularcdn')) return 'SingularCDN'});
+		}
 		if (this.Sucuri) {
 			const n = 'Sucuri';
-			reg('x-sucuri-cache', () => {return n});
-			reg('x-sucuri-id', () => {return n});
-			reg('server', v => {if (~v.indexOf('sucuri')) return n});
+			const simple = () => {return n};
 			reg('set-cookie', v => {if (~v.indexOf('sucuri-')) return n});
+			reg('server', v => {if (~v.indexOf('sucuri')) return n});
+			reg('x-sucuri-cache', simple);
+			reg('x-sucuri-id', simple);
 		}
 		if (this.Tor2web) {
 			reg('x-check-tor', () => {return 'Tor2web'});
 		}
+		if (this.Zenedge) {
+			const n = 'Zenedge';
+			const simple = () => {return n};
+			reg('server', v => {if (v === 'zenedge') return n});
+			reg('x-cdn', v => {if (v === 'served-by-zenedge') return n});
+			reg('x-zen-fury', simple);
+		}
 
 		if (this.heuristics) {
+			const simple = () => {return true};
 			this.hpatterns = {
-				'x-cache': 1,
-				'x-cache-hits': 1,
-				'x-cdn': 1,
-				'x-edge-location': 1,
-				'x-geo-city': 1,
-				'x-geo-country': 1,
-				'x-geo-ipaddr': 1,
-				'x-geo-ip': 1,
-				'x-geo-lat': 1,
-				'x-geo-lon': 1,
-				'x-served-by': 1,
-				'x-varnish': 1,
-				'x-varnish-backend': 1,
-				'x-varnish-cache': 1,
-				'x-varnish-cache-hits': 1,
-				'x-varnish-cacheable': 1,
-				'x-varnish-host': 1
+				'cdn-cache': simple,
+				'cdn-cache-hit': simple,
+				'cdn-node': simple,
+				'via': simple,
+				'x-cache': simple,
+				'x-cache-hits': simple,
+				'x-cache-status': simple,
+				'x-cdn': simple,
+				'x-edge-location': simple,
+				'x-geo-city': simple,
+				'x-geo-country': simple,
+				'x-geo-ipaddr': simple,
+				'x-geo-ip': simple,
+				'x-geo-lat': simple,
+				'x-geo-lon': simple,
+				'x-served-by': simple,
+				'x-varnish': simple,
+				'x-varnish-backend': simple,
+				'x-varnish-cache': simple,
+				'x-varnish-cache-hits': simple,
+				'x-varnish-cacheable': simple,
+				'x-varnish-host': simple
 			};
 		}
 
@@ -204,6 +262,7 @@ class TabInfo {
 		this.cdns = {};
 		this.changed = false;
 		this.docs = {};
+		this.hmatch = 0;
 		this.id = id;
 		this.status = 0;
 		this.total = 0;
@@ -218,7 +277,7 @@ class TabInfo {
 	cdn(str) {
 		if (!this.cdns[str]) {
 			this.cdns[str] = new CDNInfo();
-			if (Object.keys(this.cdns).length > 1) this.result = 3;
+			if (Object.keys(this.cdns).length > 1 + this.hmatch) this.result = 3;
 		}
 		return this.cdns[str];
 	}

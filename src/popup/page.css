@@ -10,16 +10,16 @@ ul {
 	padding-left: 1em;
 }
 div#top {
-	display: flex;
 	align-items: center;
-	justify-content: center;
+	display: flex;
 	font-size: 400%;
+	justify-content: center;
 	margin: 0%;
 	width: 100%;
 }
 p.cdn {
-	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 	font-size: 150%;
+	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
 .main {
@@ -43,25 +43,24 @@ p.cdn {
 }
 
 .tooltip {
-    position: relative;
     display: inline-block;
     border-bottom: 2px dotted #600;
+    position: relative;
 }
 
 .tooltip .tooltiptext {
 	background-color: #444;
-	font-size: small;
-    visibility: hidden;
-    width: 120px;
-    text-align: center;
-    padding: 5px 0;
     border-radius: 6px;
-
-    position: absolute;
-    z-index: 1;
-    top: 100%;
+	font-size: small;
     left: 50%;
     margin-left: -60px;
+    padding: 5px 0;
+    position: absolute;
+    text-align: center;
+    top: 100%;
+    visibility: hidden;
+    width: 120px;
+    z-index: 1;
 }
 
 .tooltip:hover .tooltiptext {

@@ -23,7 +23,7 @@
 							</div>
 							<div class="tooltip">[?]
 								<div class="tooltiptext">
-									If enabled, True Sight will detect custom headers and patterns commonly used by reverse proxy software.
+									If enabled, True Sight will detect headers commonly used by reverse proxy software, and list all matches in a separate group. Matching requests will only be listed when they do not match any known platforms' patterns.
 								</div>
 							</div>
 						</div>
@@ -42,7 +42,7 @@
 				</div>
 				<div>
 					<fieldset>
-						<legend>CDN</legend>
+						<legend>Platforms</legend>
 						<input id="Akamai" type="checkbox">
 						<label for="Akamai"> Akamai </label><br>
 						<input id="AmazonCloudfront" type="checkbox">
@@ -57,16 +57,33 @@
 						<label for="GoogleProjectShield"> Google Project Shield </label><br>
 						<input id="Incapsula" type="checkbox">
 						<label for="Incapsula"> Incapsula </label><br>
+						<input id="Instart" type="checkbox">
+						<label for="Instart"> Instart </label><br>
 						<input id="KeyCDN" type="checkbox">
 						<label for="KeyCDN"> KeyCDN </label><br>
 						<input id="Kinsta" type="checkbox">
 						<label for="Kinsta"> Kinsta </label><br>
+						<input id="Leaseweb" type="checkbox">
+						<label for="Leaseweb"> Leaseweb </label><br>
 						<input id="MyraCloud" type="checkbox">
 						<label for="MyraCloud"> MyraCloud </label><br>
+						<input id="Netlify" type="checkbox">
+						<label for="Netlify"> Netlify </label><br>
+						<input id="SingularCDN" type="checkbox">
+						<label for="SingularCDN"> SingularCDN </label><br>
 						<input id="Sucuri" type="checkbox">
 						<label for="Sucuri"> Sucuri </label><br>
+						<input id="Zenedge" type="checkbox">
+						<label for="Zenedge"> Zenedge </label><br>
+					</fieldset><br>
+				</div>
+				<div>
+					<fieldset>
+						<legend>Gateways</legend>
+						<input id="IPFS" type="checkbox">
+						<label for="IPFS"> IPFS </label><br>
 						<input id="Tor2web" type="checkbox">
-						<label for="Tor2web"> Tor2web </label><br
+						<label for="Tor2web"> Tor2web </label><br>
 					</fieldset><br>
 				</div>
 			</div>

@@ -1,3 +1,6 @@
+const extraInfo = ["responseHeaders"];
+const filter = {urls: ["<all_urls>"]};
+const requestIDs = {};
 const cb = d => {
 	'use strict';
 	if (d.tabId === -1) return;
@@ -8,18 +11,20 @@ const cb = d => {
 		if (d.redirectUrl && d.redirectUrl.indexOf('data://')) requestIDs[d.requestId] = 1;
 	}
 	tabs.getInfo(d.tabId).total++;
+	let detected = false;
 	const result = isDoc ? 2 : 1;
 	const cObj = {}; // for complex patterns involving multiple headers
 	const matched = {};
 	top:
-		for (const i in d.responseHeaders) {
-			const n = d.responseHeaders[i].name.toLowerCase();
+		for (const header of d.responseHeaders) {
+			const n = header.name.toLowerCase();
+			const v = header.value.toLowerCase();
 			if (settings.patterns[n]) {
-				const v = d.responseHeaders[i].value.toLowerCase();
 				for (const func of settings.patterns[n]) {
 					const match = func(v, cObj);
 					if (match && !matched[match]) {
-						matched[match] = 1;
+						detected = true;
+						matched[match] = true;
 						if (isDoc) {
 							tabs[d.tabId].docs[(new URL(d.url)).hostname] = requestIDs[d.requestId] ? 2 : 1;
 						}
@@ -29,16 +34,22 @@ const cb = d => {
 					}
 				}
 			}
-			if (settings.hpatterns[n] && !matched['heuristics']) {
-				matched['heuristics'] = 1
-				if (isDoc) {
-					tabs[d.tabId].docs[(new URL(d.url)).hostname] = requestIDs[d.requestId] ? 2 : 1;
-				}
-				tabs[d.tabId].cdn('Heuristic Detection').inc(d.url);
+		}
+	if (settings.heuristics && !detected) {
+		for (const header of d.responseHeaders) {
+			const n = header.name.toLowerCase();
+			const v = header.value.toLowerCase();
+			if (settings.hpatterns[n] && settings.hpatterns[n](v)) {
+				detected = true;
+				if (isDoc) tabs[d.tabId].docs[(new URL(d.url)).hostname] = requestIDs[d.requestId] ? 2 : 1;
+				tabs[d.tabId].cdn('Heuristic detection').inc(d.url);
+				tabs[d.tabId].hmatch = 1;
 				tabs[d.tabId].result = result;
+				break;
 			}
 		}
-	if (Object.keys(matched).length) {
+	}
+	if (detected) {
 		tabs[d.tabId].badgeNum++;
 		if (!requestIDs[d.requestId]) tabs[d.tabId].updateUI();
 	}
