@@ -9,91 +9,54 @@
 
 <body>
 	<form>
-		<div>
-			<div class="fs">
-				<div>
-					<fieldset>
-						<legend>General</legend>
-						<input id="paEnabled" type="checkbox">
-						<label for="paEnabled"> use address bar icon </label><br>
-						<div class="fs">
-							<div>
-								<input id="heuristics" type="checkbox">
-								<label for="heuristics"> enable heuristic detection </label><br>
-							</div>
-							<div class="tooltip">[?]
-								<div class="tooltiptext">
-									If enabled, True Sight will detect headers commonly used by reverse proxy software, and list all matches in a separate group. Matching requests will only be listed when they do not match any known platforms' patterns.
-								</div>
-							</div>
+		<fieldset>
+			<details open="true"><summary>General</summary>
+				<label><input id="paEnabled" type="checkbox"> use address bar icon </label>
+				<label><input id="heuristics" type="checkbox"> enable heuristics
+					<span class="tooltip">[?]
+						<div class="tooltiptext">
+							True Sight will detect headers commonly used by reverse proxy software, and list all matches in a separate group. Only requests that do not match any other patterns will be listed in that group.
 						</div>
-						<div class="fs">
-							<div>
-								<input id="lazy" type="checkbox">
-								<label for="lazy"> enable lazy mode </label><br>
-							</div>
-							<div class="tooltip">[?]
-								<div class="tooltiptext">
-									If enabled, True Sight stops parsing response headers for a given request as soon as it finds one match. This is usually OK because most origin servers probably don't use a multi-layered CDN setup. Enabling this is not necessary unless you experience significant performance drops.
-								</div>
-							</div>
+					</span>
+				</label>
+				<label><input id="lazy" type="checkbox"> enable lazy mode
+					<span class="tooltip">[?]
+						<div class="tooltiptext">
+							In lazy mode, True Sight stops parsing response headers for a given request as soon as it finds one match. This is usually OK because most origin servers probably don't use a multi-layered CDN setup. Enabling this is not necessary unless you experience significant performance drops.
 						</div>
-					</fieldset><br>
-				</div>
-				<div>
-					<fieldset>
-						<legend>Platforms</legend>
-						<input id="Akamai" type="checkbox">
-						<label for="Akamai"> Akamai </label><br>
-						<input id="AmazonCloudfront" type="checkbox">
-						<label for="AmazonCloudfront"> Amazon Cloudfront </label><br>
-						<input id="Cloudflare" type="checkbox">
-						<label for="Cloudflare"> Cloudflare </label><br>
-						<input id="Fastly" type="checkbox">
-						<label for="Fastly"> Fastly </label><br>
-						<input id="GoogleCloud" type="checkbox">
-						<label for="GoogleCloud"> Google Cloud </label><br>
-						<input id="GoogleProjectShield" type="checkbox">
-						<label for="GoogleProjectShield"> Google Project Shield </label><br>
-						<input id="Incapsula" type="checkbox">
-						<label for="Incapsula"> Incapsula </label><br>
-						<input id="Instart" type="checkbox">
-						<label for="Instart"> Instart </label><br>
-						<input id="KeyCDN" type="checkbox">
-						<label for="KeyCDN"> KeyCDN </label><br>
-						<input id="Kinsta" type="checkbox">
-						<label for="Kinsta"> Kinsta </label><br>
-						<input id="Leaseweb" type="checkbox">
-						<label for="Leaseweb"> Leaseweb </label><br>
-						<input id="MyraCloud" type="checkbox">
-						<label for="MyraCloud"> MyraCloud </label><br>
-						<input id="Netlify" type="checkbox">
-						<label for="Netlify"> Netlify </label><br>
-						<input id="SingularCDN" type="checkbox">
-						<label for="SingularCDN"> SingularCDN </label><br>
-						<input id="Sucuri" type="checkbox">
-						<label for="Sucuri"> Sucuri </label><br>
-						<input id="Zenedge" type="checkbox">
-						<label for="Zenedge"> Zenedge </label><br>
-					</fieldset><br>
-				</div>
-				<div>
-					<fieldset>
-						<legend>Gateways</legend>
-						<input id="IPFS" type="checkbox">
-						<label for="IPFS"> IPFS </label><br>
-						<input id="Tor2web" type="checkbox">
-						<label for="Tor2web"> Tor2web </label><br>
-					</fieldset><br>
-				</div>
-			</div>
-			<br><button type="submit">Save</button>
-		</div>
+					</span>
+				</label>
+			</details>
+		</fieldset>
+		<fieldset>
+			<details open="true" id="platforms"><summary>Platforms</summary>
+				<label><input id="Akamai" type="checkbox"> Akamai </label>
+				<label><input id="AmazonCloudfront" type="checkbox"> Amazon Cloudfront </label>
+				<label><input id="Cloudflare" type="checkbox"> Cloudflare </label>
+				<label><input id="Fastly" type="checkbox"> Fastly </label>
+				<label><input id="GoogleCloud" type="checkbox"> Google Cloud </label>
+				<label><input id="GoogleProjectShield" type="checkbox"> Google Project Shield </label>
+				<label><input id="Incapsula" type="checkbox"> Incapsula </label>
+				<label><input id="Instart" type="checkbox"> Instart </label>
+				<label><input id="KeyCDN" type="checkbox"> KeyCDN </label>
+				<label><input id="Kinsta" type="checkbox"> Kinsta </label>
+				<label><input id="Leaseweb" type="checkbox"> Leaseweb </label>
+				<label><input id="MyraCloud" type="checkbox"> MyraCloud </label>
+				<label><input id="Netlify" type="checkbox"> Netlify </label>
+				<label><input id="SingularCDN" type="checkbox"> SingularCDN </label>
+				<label><input id="Sucuri" type="checkbox"> Sucuri </label>
+				<label><input id="Zenedge" type="checkbox"> Zenedge </label>
+			</details>
+		</fieldset>
+		<fieldset>
+			<details open="true"><summary>Gateways</summary>
+				<label><input id="IPFS" type="checkbox"> IPFS </label>
+				<label><input id="Tor2web" type="checkbox"> Tor2web </label>
+			</details>
+		</fieldset>
+	<br><button type="submit">Save</button>
 	</form>
 	<script src="page.js"></script>
-	<footer>
-		[<a href="https://github.com/claustromaniac/detect-cloudflare-plus/issues">Support</a>]
-	</footer>
 </body>
 
 </html>

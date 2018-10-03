@@ -1,43 +1,48 @@
 body {
 	color: black;
+	height: 30em;
 }
+
+form {
+	width: 50em;
+}
+
 label {
+	width: 30%;
+    float: left;
 	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
-legend {
-	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
-	font-weight: bold;
+
+span {
+	text-shadow: none;
+}
+
+summary {
+	color: #08a;
 	font-size: 120%;
+	font-weight: bold;
 }
-div {
-	margin-right: 5px;
-}
-div.fs {
-	display: flex;
-}
-footer {
-	width: 100%;
-	border-top-style: double;
-	margin-top: 30px;
-}
+
 .tooltip {
-	color: #08A;
-    position: relative;
+	color: #08a;
     display: inline-block;
-    border-bottom: 1px dotted black;
+	font-size: 75%;
+	font-weight: bold;
+    position: relative;
 }
 
 .tooltip .tooltiptext {
-	color: #FFF;
 	background-color: #444;
-	font-size: small;
-    visibility: hidden;
-    width: 200px;
+    border-radius: 1em;
+	color: #FFF;
+	font-size: 125%;
+	margin-left: -8em;
+	overflow: auto;
+    padding: 1em;
+    position: fixed;
     text-align: center;
-    padding: 5px;
-    border-radius: 6px;
-
-    position: absolute;
+    visibility: hidden;
+    width: 16em;
     z-index: 1;
 }
 

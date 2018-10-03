@@ -10,6 +10,7 @@ const cb = d => {
 		else delete tabs[d.tabId];
 		if (d.redirectUrl && d.redirectUrl.indexOf('data://')) requestIDs[d.requestId] = 1;
 	}
+	if (!d.responseHeaders) return;
 	tabs.getInfo(d.tabId).total++;
 	let detected = false;
 	const result = isDoc ? 2 : 1;

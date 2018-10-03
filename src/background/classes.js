@@ -286,15 +286,11 @@ class TabInfo {
 		browser.pageAction.show(this.id);
 		browser.pageAction.setTitle({
 			tabId: this.id,
-			title: iconColorAndDesc[this.result].desc
+			title: iconData[this.result].desc
 		});
 		browser.pageAction.setIcon({
 			tabId: this.id,
-			path: {
-				16: `icons/eye-${iconColorAndDesc[this.result].color}.svg`,
-				32: `icons/eye-${iconColorAndDesc[this.result].color}.svg`,
-				64: `icons/eye-${iconColorAndDesc[this.result].color}.svg`
-			}
+			path: iconData[this.result].path
 		});
 	}
 	updateUI() {
@@ -302,12 +298,12 @@ class TabInfo {
 			this.changed = false;
 			this.updatePageAction();
 			browser.browserAction.setBadgeBackgroundColor({
-				color: iconColorAndDesc[this.result].color,
+				color: iconData[this.result].color,
 				tabId: this.id
 			});
 			browser.browserAction.setTitle({
 				tabId: this.id,
-				title: iconColorAndDesc[this.result].desc
+				title: iconData[this.result].desc
 			});
 		}
 		browser.browserAction.setBadgeText({

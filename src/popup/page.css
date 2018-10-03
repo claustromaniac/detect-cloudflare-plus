@@ -2,64 +2,64 @@ body {
 	background-color: #222;
 	color: #aaa;
 	font-weight: bold;
-	padding: 0em 3em;
+	padding: 1em 3em;
 }
 
 ul {
-	margin-top: -1ex;
+	margin-top: -1em;
 	padding-left: 1em;
 }
+
 div#top {
 	align-items: center;
 	display: flex;
-	font-size: 400%;
+	font-size: 4em;
 	justify-content: center;
 	margin: 0%;
 	width: 100%;
 }
 p.cdn {
-	font-size: 150%;
-	text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+	font-size: 1.5em;
 }
 
 .main {
 	color: red;
 }
 .redirect {
-	color: #A00;
-	/* font-style: italic; */
+	color: #a00;
 	font-style: oblique;
 }
 .external {
 	color: yellow;
 }
 .none {
-	color: #08A;
-	font-size: 150%;
+	color: #08a;
+	font-size: 1.5em;
 }
-
 .count {
 	color: #FFF;
 }
 
 .tooltip {
     display: inline-block;
-    border-bottom: 2px dotted #600;
+    border-bottom: 0.05em dotted #600;
     position: relative;
 }
 
 .tooltip .tooltiptext {
 	background-color: #444;
-    border-radius: 6px;
-	font-size: small;
+    border-radius: 0.25em;
+	font-size: 25%;
+	font-weight: normal;
     left: 50%;
-    margin-left: -60px;
-    padding: 5px 0;
+    margin-left: -5em;
+	overflow: auto;
+    padding: 0.25em 0;
     position: absolute;
     text-align: center;
     top: 100%;
     visibility: hidden;
-    width: 120px;
+	width: 10em;
     z-index: 1;
 }
 
