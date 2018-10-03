@@ -3,16 +3,20 @@
 
 [![badass cat iris](stuff/eye.png)][1]
 
-This Firefox extension aims to expose today's most omnipresent agents on the Internet: *Content Delivery Networks (CDN)*.
+This Firefox extension aims to expose today's most omnipresent agents on the Internet: *Content Delivery Networks (CDNs)*.
 
-Never heard of CDN? As it turns out, most of the global internet traffic goes through CDN so seamlessly that the majority of the population never even notices. These third parties are hired by website owners *(often for "free"!)*, and their role in this ecosystem is that of messengers. They have many eyes, many hands, and they are *everywhere*. They're so widespread that one would have to actually stop using a massive chunk of the Internet entirely in order to steer clear of them all.
+Did you know that at least about 70% of the global internet traffic goes through CDNs? These third parties are hired by website owners *(often for "free"!)*, to speed up their websites and protect them against attacks, among other things.
 
-**... but that alone shouldn't be enough of a reason to trust them, should it?**
+Most of the time neither the site owners, nor the CDN providers themselves make any effort to make their presence as an intermediaries apparent to the clients (the end users). In fact, in most cases, there is an effort to *disguise* their presence as much as possible. Additionally, some CDN providers offer services in ways that have important security and/or privacy considerations for the end users.
 
 Your newfound True Sight power alone will not save you from anyone, but it will hopefully bring you awareness. I think we all deserve to at least **know** when some giant corporate ninja is sitting right between us and the real servers that we [so innocently *try* to reach][2] everyday. How you use this power is up to you.
 
 Read [the description on AMO][1] to learn more about how this extension works.
 
+Acknowledgements
+----------------
+
+Thanks to @n8v8r for the icon, and for all the feedback.
 
 Privacy
 --------

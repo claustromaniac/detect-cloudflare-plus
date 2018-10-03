@@ -31,7 +31,7 @@
 		"default_title": "True Sight"
 	},
 
-	"description": "Reveals content delivery networks.",
+	"description": "Reveals content delivery networks and related cloud services.",
 
 	"homepage_url": "https://github.com/claustromaniac/detect-cloudflare-plus",
 
