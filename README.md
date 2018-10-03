@@ -16,7 +16,7 @@ Read [the description on AMO][1] to learn more about how this extension works.
 Acknowledgements
 ----------------
 
-Thanks to @n8v8r for the icon, and for all the feedback.
+Thanks to [@n8v8r][3] for the icon, and for all the feedback.
 
 Privacy
 --------
@@ -26,3 +26,4 @@ This extension neither collects nor shares any kind of information whatsoever. S
 
 [1]: https://addons.mozilla.org/firefox/addon/detect-cloudflare-plus/
 [2]: https://en.wikipedia.org/wiki/Reverse_proxy
+[3]: https://github.com/n8v8r/
