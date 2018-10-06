@@ -15,6 +15,7 @@ class Settings {
 			'heuristics': false,
 			'lazy': false,
 
+			'AlibabaCloud': true,
 			'Akamai': true,
 			'AmazonCloudfront': true,
 			'Cloudflare': true,
@@ -57,11 +58,22 @@ class Settings {
 			this.patterns[h].push(func);
 		};
 
+		if (this.AlibabaCloud) {
+			const n = 'Alibaba Cloud';
+			const simple = () => {return n};
+			reg('ali-swift-global-savetime', simple);
+			reg('eagleeye-traceid', simple);
+			reg('eagleid', simple);
+			// reg('server', v => {if (!v.indexOf('tengine')) return n});
+			reg('vary', v => {if (~v.indexOf('ali-detector-type') || ~v.indexOf('ali-hng')) return n});
+			reg('x-swift-cachetime', simple);
+			reg('x-swift-savetime', simple);
+		}
 		if (this.Akamai) {
 			const n = 'Akamai';
 			const simple = () => {return n};
 			reg('server', v => {if (~v.indexOf('akamai')) return n});
-			reg('set-cookie', v => {if (~v.indexOf('akacd_') || ~v.indexOf('aka_a2')) return n});
+			reg('set-cookie', v => {if (!v.indexOf('akacd_') || !v.indexOf('aka_a2')) return n});
 			reg('x-akamai-session-info', simple);
 			reg('x-akamai-ssl-client-sid', simple);
 			reg('x-akamai-transformed', simple);
@@ -89,7 +101,7 @@ class Settings {
 			reg('cf-ray', simple);
 			reg('expect-ct', v => {if (~v.indexOf('report-uri.cloudflare.com')) return n});
 			reg('server', v => {if (~v.indexOf('cloudflare')) return n});
-			reg('set-cookie', v => {if (~v.indexOf('__cfduid')) return n});
+			reg('set-cookie', v => {if (!v.indexOf('__cfduid') || !v.indexOf('__cflib')) return n});
 		}
 		if (this.Fastly) {
 			const n = 'Fastly';
@@ -102,15 +114,6 @@ class Settings {
 			reg('vary', v => {if (~v.indexOf('fastly-ssl')) return n});
 			reg('x-timer', v => {if (rx.test(v)) return n});
 		}
-/* 		if (this.GoogleAMP) {
-			const n = 'GoogleAMP';
-			reg('content-security-policy', v => {
-				if (~v.indexOf('cdn.ampproject.org') ||
-					~v.indexOf('https://csp-collector.appspot.com/csp/amp')) {
-						return n;
-				}
-			});
-		} */
 		if (this.GoogleCloud) {
 			const n = 'Google Cloud';
 			const simple = () => {return n};
@@ -134,7 +137,7 @@ class Settings {
 		}
 		if (this.Incapsula) {
 			const n = 'Incapsula';
-			reg('set-cookie', v => {if (~v.indexOf('visid_incap_')) return n});
+			reg('set-cookie', v => {if (!v.indexOf('visid_incap_')) return n});
 			reg('x-cdn', v => {if (~v.indexOf('incapsula')) return n});
 			reg('x-iinfo', () => {return n});
 		}
@@ -195,7 +198,7 @@ class Settings {
 		if (this.Sucuri) {
 			const n = 'Sucuri';
 			const simple = () => {return n};
-			reg('set-cookie', v => {if (~v.indexOf('sucuri-')) return n});
+			reg('set-cookie', v => {if (!v.indexOf('sucuri-')) return n});
 			reg('server', v => {if (~v.indexOf('sucuri')) return n});
 			reg('x-sucuri-cache', simple);
 			reg('x-sucuri-id', simple);
@@ -214,9 +217,11 @@ class Settings {
 		if (this.heuristics) {
 			const simple = () => {return true};
 			this.hpatterns = {
+				'age': simple,
 				'cdn-cache': simple,
 				'cdn-cache-hit': simple,
 				'cdn-node': simple,
+				'vary': simple,
 				'via': simple,
 				'x-cache': simple,
 				'x-cache-hits': simple,
@@ -229,13 +234,15 @@ class Settings {
 				'x-geo-ip': simple,
 				'x-geo-lat': simple,
 				'x-geo-lon': simple,
+				'x-proxy-cache': simple,
 				'x-served-by': simple,
 				'x-varnish': simple,
 				'x-varnish-backend': simple,
 				'x-varnish-cache': simple,
 				'x-varnish-cache-hits': simple,
 				'x-varnish-cacheable': simple,
-				'x-varnish-host': simple
+				'x-varnish-host': simple,
+				'x-via': simple
 			};
 		}
 
