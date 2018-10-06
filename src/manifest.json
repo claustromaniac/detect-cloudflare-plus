@@ -27,7 +27,7 @@
 			"64": "icons/eye64.png",
 			"128": "icons/eye.svg"
 		},
-		"default_popup": "popup/page.htm",
+		"default_popup": "popup/popup.htm",
 		"default_title": "True Sight"
 	},
 
@@ -47,7 +47,7 @@
 
 	"options_ui": {
 		"browser_style": true,
-		"page": "options/page.htm"
+		"page": "options/options.htm"
 	},
 
 	"page_action": {
@@ -59,7 +59,7 @@
 			"128": "icons/eye.svg"
 		},
 		"default_title": "",
-		"default_popup": "popup/page.htm"
+		"default_popup": "popup/popup.htm"
 	},
 
 	"permissions": [
