@@ -1,9 +1,9 @@
-[**True Sight**][1]
+**True Sight**
 ====================
 
-[![badass cat iris](stuff/eye.png)][1]
+[![cool eye](stuff/eye.png)][1]
 
-This Firefox extension aims to expose today's most omnipresent agents on the Internet: *Content Delivery Networks (CDNs)*.
+This Firefox extension aims to expose today's most omnipresent agents on the Internet: [*CDNs*][4].
 
 Did you know that at least about 70% of the global internet traffic goes through CDNs? These third parties are hired by website owners *(often for "free"!)*, to speed up their websites and protect them against attacks, among other things.
 
@@ -16,7 +16,7 @@ Read [the description on AMO][1] to learn more about how this extension works.
 Acknowledgements
 ----------------
 
-Thanks to [@n8v8r][3] for the icon, and for all the feedback.
+Thanks to [@n8v8R][3] for the icon, and for all the feedback.
 
 Privacy
 --------
@@ -27,3 +27,4 @@ This extension neither collects nor shares any kind of information whatsoever. S
 [1]: https://addons.mozilla.org/firefox/addon/detect-cloudflare-plus/
 [2]: https://en.wikipedia.org/wiki/Reverse_proxy
 [3]: https://github.com/n8v8r/
+[4]: https://en.wikipedia.org/wiki/Content_delivery_network
