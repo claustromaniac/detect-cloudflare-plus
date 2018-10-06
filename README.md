@@ -7,11 +7,11 @@ This Firefox extension aims to expose today's most omnipresent agents on the Int
 
 Did you know that at least about 70% of the global internet traffic goes through CDNs? These third parties are hired by website owners *(often for "free"!)*, to speed up their websites and protect them against attacks, among other things.
 
-Most of the time, neither the site owners nor the CDN providers themselves make any effort to make their presence as intermediaries apparent to the end users. In fact, in many cases there is an effort to *disguise* their presence as much as possible. This is *not* nice, specially considering that some CDN providers offer services in ways that have important security and/or privacy considerations for us end users.
+Most of the times, neither the site owners nor the CDN providers themselves make any effort to make apparent to us, the end users, the presence of the latter as intermediaries. In fact, in many cases there is an effort to *disguise* their presence as much as possible. This is *not* nice, specially considering that some CDN providers offer services in ways that present important security and/or privacy considerations to us.
 
 Your newfound True Sight power alone will not save you from anyone, but it will hopefully bring you awareness. I think we all deserve to at least **know** when some giant corporate ninja is sitting right between us and the real servers that we [so innocently *try* to reach][2] everyday. How you use this power is up to you.
 
-Read [the description on AMO][1] to learn more about how this extension works.
+Read [the description on AMO][1] to learn specifics on how this extension works.
 
 Acknowledgements
 ----------------
