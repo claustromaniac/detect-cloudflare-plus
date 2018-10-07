@@ -10,10 +10,12 @@ class Settings {
 	constructor() {
 		this.patterns = {};
 		this.hpatterns = {};
+		this.storage = browser.storage.local;
 		this.defaults = {
 			'paEnabled': true,
 			'heuristics': false,
 			'lazy': false,
+			'sync': false,
 
 			'AlibabaCloud': true,
 			'Akamai': true,
@@ -38,10 +40,24 @@ class Settings {
 		for (const i in this.defaults) this[i] = this.defaults[i];
 	}
 
+	save(obj) {
+		if (obj.hasOwnProperty('sync')) {
+			if (obj.sync) {
+				browser.storage.local.clear();
+				this.storage = browser.storage.sync;
+			} else {
+				browser.storage.sync.clear();
+				this.storage = browser.storage.local;
+			}
+		}
+
+		this.storage.set(obj);
+	}
+
 	get all() {
 		const val = {};
 		for (const i in this.defaults) {
-			this.hasOwnProperty(i) ? val[i] = this[i] : val[i] = this.defaults[i];
+			val[i] = this.hasOwnProperty(i) ? this[i] : this.defaults[i];
 		}
 		return val;
 	}
@@ -50,6 +66,8 @@ class Settings {
 		for (const i in obj) {
 			this[i] = obj[i];
 		}
+
+		this.save(obj);
 
 		this.patterns = {};
 		this.hpatterns = {};
@@ -118,6 +136,7 @@ class Settings {
 			const n = 'Google Cloud';
 			const simple = () => {return n};
 			reg('server', v => {if (v === 'google frontend') return n});
+			reg('via', v => {if (v === '1.1 google') return n});
 			reg('x-cloud-trace-context', simple);
 			reg('x-goog-component-count', simple);
 			reg('x-goog-encryption-algorithm', simple);

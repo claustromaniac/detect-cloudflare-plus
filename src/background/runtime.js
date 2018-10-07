@@ -9,3 +9,9 @@ browser.runtime.onConnect.addListener(port => {
 		});
 	});
 });
+
+browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+	// triggered by options page script
+	if (msg === 'getSettings') sendResponse(settings.all);
+	else if (msg) settings.all = msg;
+});

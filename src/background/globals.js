@@ -1,4 +1,4 @@
-var settings = new Settings();
+const settings = new Settings();
 const tabs = new Tabs();
 const iconData = [
 	{
