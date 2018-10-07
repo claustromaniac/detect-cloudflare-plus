@@ -8,11 +8,11 @@ const iconData = [
 	},
 
 	{
-		color: 'yellow',
+		color: 'orange',
 		desc: 'External resources were served by a CDN.',
 		path: {
-			16: 'icons/eye16-yellow.png',
-			32: 'icons/eye32-yellow.png'
+			16: 'icons/eye16-orange.png',
+			32: 'icons/eye32-orange.png'
 		}
 	},
 
