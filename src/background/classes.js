@@ -40,20 +40,6 @@ class Settings {
 		for (const i in this.defaults) this[i] = this.defaults[i];
 	}
 
-	save(obj) {
-		if (obj.hasOwnProperty('sync')) {
-			if (obj.sync) {
-				browser.storage.local.clear();
-				this.storage = browser.storage.sync;
-			} else {
-				browser.storage.sync.clear();
-				this.storage = browser.storage.local;
-			}
-		}
-
-		this.storage.set(obj);
-	}
-
 	get all() {
 		const val = {};
 		for (const i in this.defaults) {
@@ -67,7 +53,9 @@ class Settings {
 			this[i] = obj[i];
 		}
 
-		this.save(obj);
+		if (obj.hasOwnProperty('sync')) {
+			this.storage = obj.sync ? browser.storage.sync : browser.storage.local;
+		}
 
 		this.patterns = {};
 		this.hpatterns = {};
