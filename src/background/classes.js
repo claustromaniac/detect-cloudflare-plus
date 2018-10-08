@@ -228,7 +228,6 @@ class Settings {
 				'cdn-cache': simple,
 				'cdn-cache-hit': simple,
 				'cdn-node': simple,
-				'vary': simple,
 				'via': simple,
 				'x-cache': simple,
 				'x-cache-hits': simple,
