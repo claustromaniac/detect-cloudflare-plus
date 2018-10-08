@@ -10,7 +10,6 @@ class Settings {
 	constructor() {
 		this.patterns = {};
 		this.hpatterns = {};
-		this.storage = browser.storage.local;
 		this.defaults = {
 			'paEnabled': true,
 			'heuristics': false,
@@ -38,23 +37,52 @@ class Settings {
 			'Zenedge': true
 		};
 		for (const i in this.defaults) this[i] = this.defaults[i];
+		this.loading = (async () => {
+			let saved = await browser.storage.local.get(this.defaults);
+			saved = await browser.storage.sync.get(saved);
+			this.all = saved;
+			if (this.sync) await browser.storage.sync.set(saved);
+			else await browser.storage.sync.clear();
+			await browser.storage.local.set(saved);
+			browser.storage.onChanged.addListener((changes, area) => {
+				console.log(`True Sight: ${area} storage changed`);
+				if (area === 'sync') {
+					if (this.sync) {
+						const obj = {};
+						for (const i in changes) {
+							if (changes[i].hasOwnProperty('newValue')) {
+								obj[i] = changes[i].newValue;
+							}
+						}
+						browser.storage.local.set(obj);
+					}
+				} else {
+					const obj = {};
+					for (const i in changes) {
+						if (changes[i].hasOwnProperty('newValue')) obj[i] = changes[i].newValue;
+					}
+					this.all = obj;
+				}
+			});
+			console.log('True Sight: settings loaded');
+			delete this.loading;
+		})();
 	}
 
 	get all() {
-		const val = {};
-		for (const i in this.defaults) {
-			val[i] = this.hasOwnProperty(i) ? this[i] : this.defaults[i];
-		}
-		return val;
+		return (async () => {
+			if (this.loading) await this.loading;
+			const val = {};
+			for (const i in this.defaults) {
+				val[i] = this[i];
+			}
+			return val;
+		})();
 	}
 
 	set all(obj) {
 		for (const i in obj) {
 			this[i] = obj[i];
-		}
-
-		if (obj.hasOwnProperty('sync')) {
-			this.storage = obj.sync ? browser.storage.sync : browser.storage.local;
 		}
 
 		this.patterns = {};

@@ -13,7 +13,6 @@
 			"background/classes.js",
 			"background/globals.js",
 			"background/runtime.js",
-			"background/storage.js",
 			"background/tabs.js",
 			"background/webRequest.js"
 		]
