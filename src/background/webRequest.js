@@ -10,8 +10,8 @@ const cb = d => {
 		else delete tabs[d.tabId];
 		if (d.redirectUrl && d.redirectUrl.indexOf('data://')) requestIDs[d.requestId] = 1;
 	}
-	tabs.getInfo(d.tabId).total++;
 	if (!d.responseHeaders) return;
+	tabs.getInfo(d.tabId).total++;
 	let detected = false;
 	const result = isDoc ? 2 : 1;
 	const cObj = {}; // for complex patterns involving multiple headers
