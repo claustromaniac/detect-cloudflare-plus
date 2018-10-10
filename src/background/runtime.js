@@ -12,5 +12,5 @@ browser.runtime.onConnect.addListener(port => {
 
 browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 	// triggered by options page script
-		return settings.all;
+	return settings.all;
 });

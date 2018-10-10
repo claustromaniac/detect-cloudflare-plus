@@ -36,7 +36,6 @@ class Settings {
 			'Tor2web': true,
 			'Zenedge': true
 		};
-		for (const i in this.defaults) this[i] = this.defaults[i];
 		this.loading = (async () => {
 			let saved = await browser.storage.local.get(this.defaults);
 			saved = await browser.storage.sync.get(saved);
@@ -356,8 +355,8 @@ class TabInfo {
 
 class Tabs {
 	getInfo(id) {
-		if (this[id]) return this[id];
-		else return this[id] = new TabInfo(id);
+		if (!this[id]) this[id] = new TabInfo(id);
+		return this[id];
 	}
 	togglePageActions(bool) {
 		for (const i in this) {
