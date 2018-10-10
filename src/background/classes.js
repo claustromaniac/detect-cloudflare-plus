@@ -19,8 +19,10 @@ class Settings {
 			'AlibabaCloud': true,
 			'Akamai': true,
 			'AmazonCloudfront': true,
+			'CDN77': true,
 			'Cloudflare': true,
 			'Fastly': true,
+			'GoCache': true,
 			'GoogleCloud': true,
 			'GoogleProjectShield': true,
 			'Incapsula': true,
@@ -31,9 +33,11 @@ class Settings {
 			'Leaseweb': true,
 			'MyraCloud': true,
 			'Netlify': true,
+			'Quantil': true,
 			'SingularCDN': true,
 			'Sucuri': true,
 			'Tor2web': true,
+			'VerizonEdgecast': true,
 			'Zenedge': true
 		};
 		this.loading = (async () => {
@@ -136,6 +140,10 @@ class Settings {
 			reg('server', v => {if (~v.indexOf('cloudflare')) return n});
 			reg('set-cookie', v => {if (!v.indexOf('__cfduid') || !v.indexOf('__cflib')) return n});
 		}
+		if (this.CDN77) {
+			const n = 'CDN77';
+			reg('server', v => {if (v === 'cdn77-turbo') return n});
+		}
 		if (this.Fastly) {
 			const n = 'Fastly';
 			const simple = () => {return n};
@@ -147,11 +155,16 @@ class Settings {
 			reg('vary', v => {if (~v.indexOf('fastly-ssl')) return n});
 			reg('x-timer', v => {if (rx.test(v)) return n});
 		}
+		if (this.GoCache) {
+			const n = 'GoCache';
+			reg('server', v => {if (v === 'gocache') return n});
+			reg('x-gocache-cachestatus', () => {return n});
+		}
 		if (this.GoogleCloud) {
 			const n = 'Google Cloud';
 			const simple = () => {return n};
 			reg('server', v => {if (v === 'google frontend') return n});
-			reg('via', v => {if (v === '1.1 google') return n});
+			reg('via', v => {if (~v.indexOf('google')) return n});
 			reg('x-cloud-trace-context', simple);
 			reg('x-goog-component-count', simple);
 			reg('x-goog-encryption-algorithm', simple);
@@ -197,17 +210,17 @@ class Settings {
 			const n = 'Kinsta';
 			reg('server', (v, obj) => {
 				if (!v.indexOf('kinsta')) {
-					if (obj.hasOwnProperty('Kinsta')) return n;
-					else obj.Kinsta = 1;
+					if (obj.hasOwnProperty(n)) return n;
+					obj[n] = 1;
 				}
 			});
 			reg('x-cache', (v, obj) => {
-				if (!obj.Kinsta) obj.Kinsta = 0;
-				else return n;
+				if (obj[n]) return n;
+				obj[n] = 0;
 			});
 			reg('x-edge-location', (v, obj) => {
-				if (!obj.Kinsta) obj.Kinsta = 0;
-				else return n;
+				if (obj[n]) return n;
+				obj[n] = 0;
 			});
 			reg('x-kinsta-cache', () => {return n});
 		}
@@ -226,6 +239,10 @@ class Settings {
 			reg('server', v => {if (!v.indexOf('netlify')) return 'Netlify'});
 			reg('x-nf-request-id', () => { return 'Netlify'});
 		}
+		if (this.Quantil) {
+			const rx = /^\d\.\d\s+[^:]+:\d+\s+\(cdn cache server v\d\.\d\)/;
+			reg('x-via', v => {if (rx.test(v)) return 'Quantil'});
+		}
 		if (this.SingularCDN) {
 			reg('server', v => {if (!v.indexOf('singularcdn')) return 'SingularCDN'});
 		}
@@ -240,6 +257,10 @@ class Settings {
 		if (this.Tor2web) {
 			reg('x-check-tor', () => {return 'Tor2web'});
 		}
+		if (this.VerizonEdgecast) {
+			const rx = /^ec[sd] \([^\/]+\/[^\/]+\)/;
+			reg('server', v => {if (rx.test(v)) return 'Verizon Edgecast'});
+		}
 		if (this.Zenedge) {
 			const n = 'Zenedge';
 			const simple = () => {return n};
@@ -252,14 +273,19 @@ class Settings {
 			const simple = () => {return true};
 			this.hpatterns = {
 				'age': simple,
+				'cache': simple,
 				'cdn-cache': simple,
 				'cdn-cache-hit': simple,
 				'cdn-node': simple,
 				'via': simple,
+				'x-age': simple,
 				'x-cache': simple,
 				'x-cache-hits': simple,
 				'x-cache-status': simple,
+				'x-cached-since': simple,
+				'x-cached-until': simple,
 				'x-cdn': simple,
+				'x-edge-ip': simple,
 				'x-edge-location': simple,
 				'x-geo-city': simple,
 				'x-geo-country': simple,
