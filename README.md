@@ -1,7 +1,9 @@
-**True Sight**
-====================
-
-[![cool eye](stuff/eye.png)][1]
+<p align="center">
+    <a href="https://addons.mozilla.org/firefox/addon/detect-cloudflare-plus/">
+        <img src="/stuff/eye.png" alt="cool eye">
+    </a><br>
+    <h1 align="center">True Sight</h1><br><br><br>
+</p>
 
 This Firefox extension aims to expose today's most omnipresent agents on the Internet: [*CDNs*][4].
 
@@ -12,15 +14,15 @@ Most of the times, neither the site owners nor the CDN providers themselves make
 Your newfound True Sight power alone will not save you from anyone, but it will hopefully bring you awareness. I think we all deserve to at least **know** when some giant corporate ninja is sitting right between us and the real servers that we [so innocently *try* to reach][2] everyday. How you use this power is up to you.
 
 Read [the description on AMO][1] to learn specifics on how this extension works.
-
+ 
+ 
 Acknowledgements
 ----------------
-
 Thanks to [@n8v8R][3] for the icon, and for all the feedback.
 
+ 
 Privacy
 --------
-
 This extension neither collects nor shares any kind of information whatsoever. See the full privacy policy on AMO if you need a slightly longer statement telling you the same.
 
 
