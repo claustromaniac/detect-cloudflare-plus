@@ -274,9 +274,16 @@ class Settings {
 			this.hpatterns = {
 				'age': simple,
 				'cache': simple,
+				'cache-control': v => {
+						return (
+							~v.indexOf('s-maxage') || ~v.indexOf('proxy-revalidate')
+						);
+					},
+				'cache-tag': simple,
 				'cdn-cache': simple,
 				'cdn-cache-hit': simple,
 				'cdn-node': simple,
+				'edge-control': simple,
 				'via': simple,
 				'x-age': simple,
 				'x-cache': simple,
@@ -295,6 +302,7 @@ class Settings {
 				'x-geo-lon': simple,
 				'x-proxy-cache': simple,
 				'x-served-by': simple,
+				'x-storage': simple,
 				'x-varnish': simple,
 				'x-varnish-backend': simple,
 				'x-varnish-cache': simple,
