@@ -8,8 +8,6 @@ class misc {
 
 class Settings {
 	constructor() {
-		this.patterns = {};
-		this.hpatterns = {};
 		this.defaults = {
 			'paEnabled': true,
 			'heuristics': false,
@@ -19,9 +17,14 @@ class Settings {
 			'AlibabaCloud': true,
 			'Akamai': true,
 			'AmazonCloudfront': true,
+			'Baidu': true,
+			'BelugaCDN': true,
+			'BootstrapCDN': true,
+			'BunnyCDN': true,
 			'CDN77': true,
 			'Cloudflare': true,
 			'Fastly': true,
+			'GitHub': true,
 			'GoCache': true,
 			'GoogleCloud': true,
 			'GoogleProjectShield': true,
@@ -33,10 +36,12 @@ class Settings {
 			'Leaseweb': true,
 			'MyraCloud': true,
 			'Netlify': true,
+			'QiHU': true,
 			'Quantil': true,
 			'SingularCDN': true,
 			'Sucuri': true,
 			'Tor2web': true,
+			'Variti': true,
 			'VerizonEdgecast': true,
 			'Zenedge': true
 		};
@@ -99,6 +104,7 @@ class Settings {
 			const n = 'Alibaba Cloud';
 			const simple = () => {return n};
 			reg('ali-swift-global-savetime', simple);
+			reg('content-security-policy-report-only', v => {if (~v.indexOf('alibaba.com/csp') return n});
 			reg('eagleeye-traceid', simple);
 			reg('eagleid', simple);
 			// reg('server', v => {if (!v.indexOf('tengine')) return n});
@@ -109,6 +115,7 @@ class Settings {
 		if (this.Akamai) {
 			const n = 'Akamai';
 			const simple = () => {return n};
+			reg('edge-cache-tag', v => {if (~v.indexOf('akamai')) return n}); //not supposed to reach browsers, but I've seen it.
 			reg('server', v => {if (~v.indexOf('akamai')) return n});
 			reg('set-cookie', v => {if (!v.indexOf('akacd_') || !v.indexOf('aka_a2')) return n});
 			reg('x-akamai-session-info', simple);
@@ -118,7 +125,7 @@ class Settings {
 			reg('x-check-cacheable', v => {if (v == 'yes' || v == 'no') return n});
 		}
 		if (this.AmazonCloudfront) {
-			const n = 'Amazon Cloudfront';
+			const n = 'Cloudfront (Amazon)';
 			const simple = () => {return n};
 			reg('x-amz-cf-id', simple);
 			reg('x-amz-id-2', simple);
@@ -128,6 +135,42 @@ class Settings {
 			reg('x-cache', v => {if (~v.indexOf('cloudfront')) return n});
 			reg('set-cookie', v => {if (!v.indexOf('awsalb')) return n});
 			reg('via', v => {if (~v.indexOf('cloudfront')) return n});
+		}
+		if (this.Baidu) {
+			const n = 'Baidu';
+			const simple = () => {return n};
+			reg('x-bce-content-crc32', simple);
+			reg('x-bce-date', simple);
+			reg('x-bce-debug-id', simple);
+			reg('x-bce-generate-date', simple);
+			reg('x-bce-request-id', simple);
+			reg('x-bce-security-token', simple);
+			reg('x-bce-storage-class', simple);
+			reg('server', v => {if (v === 'jsp3/2.0.14') return n});
+			reg('set-cookie', v => {if (!v.indexOf('baiduid')) return n});
+		}
+		if (this.BelugaCDN) {
+			const n = 'BelugaCDN';
+			const simple = () => {return n};
+			reg('x-beluga-cache-status', simple);
+			reg('x-beluga-node', simple);
+			reg('x-beluga-record', simple);
+			reg('x-beluga-response-time', simple);
+			reg('x-beluga-response-time-x', simple);
+			reg('x-beluga-status', simple);
+			reg('x-beluga-trace', simple);
+			reg('server', v => {if (!v.indexOf('beluga')) return n});
+		}
+		if (this.BootstrapCDN) {
+			const n = 'BootstrapCDN (Stackpath)';
+			reg('x-hello-human', v => {if (~v.indexOf('bootstrap')) return n});
+		}
+		if (this.BunnyCDN) {
+			const n = 'BunnyCDN';
+			const rx = /^\d+$/;
+			reg('cdn-cachedat', v => {if (v) return n});
+			reg('cdn-pullzone', v => {if (rx.test(v)) return n});
+			reg('server', v => {if (!v.indexOf('bunnycdn')) return n});
 		}
 		if (this.Cloudflare) {
 			const n = 'Cloudflare';
@@ -141,8 +184,7 @@ class Settings {
 			reg('set-cookie', v => {if (!v.indexOf('__cfduid') || !v.indexOf('__cflib')) return n});
 		}
 		if (this.CDN77) {
-			const n = 'CDN77';
-			reg('server', v => {if (v === 'cdn77-turbo') return n});
+			reg('server', v => {if (!v.indexOf('cdn77')) return 'CDN77'});
 		}
 		if (this.Fastly) {
 			const n = 'Fastly';
@@ -154,6 +196,13 @@ class Settings {
 			reg('server', v => {if (v === 'artisanal bits') return n});
 			reg('vary', v => {if (~v.indexOf('fastly-ssl')) return n});
 			reg('x-timer', v => {if (rx.test(v)) return n});
+		}
+		if (this.GitHub) {
+			const n = 'GitHub';
+			reg('expect-ct', v => {if (~v.indexOf('github.com')) return n});
+			reg('server', v => {if (v === 'github.com') return n});
+			reg('set-cookie', v => {if (!v.indexOf('__gh_sess')) return n});
+			reg('x-github-request-id', () => {return 'GitHub'});
 		}
 		if (this.GoCache) {
 			const n = 'GoCache';
@@ -189,14 +238,13 @@ class Settings {
 			reg('x-iinfo', () => {return n});
 		}
 		if (this.Instart) {
-			const n = 'Instart';
 			const simple = () => {return 'Instart'};
-			reg('x-instart-streaming', simple);
 			reg('x-instart-cache-id', simple);
 			reg('x-instart-ip-classification', simple);
 			reg('x-instart-ip-score', simple);
 			reg('x-instart-network-lists', simple);
 			reg('x-instart-request-id', simple);
+			reg('x-instart-streaming', simple);
 		}
 		if (this.IPFS) {
 			const simple = () => {return 'IPFS'};
@@ -240,8 +288,15 @@ class Settings {
 			reg('x-nf-request-id', () => { return 'Netlify'});
 		}
 		if (this.Quantil) {
+			const n = 'Quantil';
 			const rx = /^\d\.\d\s+[^:]+:\d+\s+\(cdn cache server v\d\.\d\)/;
-			reg('x-via', v => {if (rx.test(v)) return 'Quantil'});
+			reg('server', v => {if (!v.indexOf('cdn cache server v')) return n});
+			reg('x-via', v => {if (rx.test(v)) return n});
+		}
+		if (this.QiHU) {
+			const simple = () => {return 'QiHU'};
+			reg('x-qhcdn', simple);
+			reg('x-qstatic-hit', simple);
 		}
 		if (this.SingularCDN) {
 			reg('server', v => {if (!v.indexOf('singularcdn')) return 'SingularCDN'});
@@ -257,9 +312,13 @@ class Settings {
 		if (this.Tor2web) {
 			reg('x-check-tor', () => {return 'Tor2web'});
 		}
+		if (this.Varity) {
+			reg('x-variti-ccr', () => {return 'Varity'});
+		}
 		if (this.VerizonEdgecast) {
 			const rx = /^ec[sd] \([^\/]+\/[^\/]+\)/;
-			reg('server', v => {if (rx.test(v)) return 'Verizon Edgecast'});
+			reg('server', v => {if (rx.test(v)) return 'Edgecast (Verizon)'});
+			reg('x-human', v => {if (~v.indexOf('verizon')) return n});
 		}
 		if (this.Zenedge) {
 			const n = 'Zenedge';
@@ -284,14 +343,22 @@ class Settings {
 				'cdn-cache-hit': simple,
 				'cdn-node': simple,
 				'edge-control': simple,
+				'source-age': simple,
 				'via': simple,
 				'x-age': simple,
 				'x-cache': simple,
+				'x-cache-age': simple,
 				'x-cache-hits': simple,
+				'x-cache-node': simple,
 				'x-cache-status': simple,
+				'x-cached': simple,
+				'x-cached-by': simple,
 				'x-cached-since': simple,
+				'x-cacheserver': simple,
 				'x-cached-until': simple,
 				'x-cdn': simple,
+				'x-edge-cache': simple,
+				'x-edge-cache-key': simple,
 				'x-edge-ip': simple,
 				'x-edge-location': simple,
 				'x-geo-city': simple,
@@ -302,13 +369,17 @@ class Settings {
 				'x-geo-lon': simple,
 				'x-proxy-cache': simple,
 				'x-served-by': simple,
+				'x-served-from': simple,
 				'x-storage': simple,
 				'x-varnish': simple,
 				'x-varnish-backend': simple,
 				'x-varnish-cache': simple,
+				'x-varnish-cache-control': simple,
 				'x-varnish-cache-hits': simple,
 				'x-varnish-cacheable': simple,
+				'x-varnish-hits': simple,
 				'x-varnish-host': simple,
+				'x-varnish-seen-by': simple,
 				'x-via': simple
 			};
 		}
