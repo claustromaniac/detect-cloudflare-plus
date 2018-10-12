@@ -104,7 +104,7 @@ class Settings {
 			const n = 'Alibaba Cloud';
 			const simple = () => {return n};
 			reg('ali-swift-global-savetime', simple);
-			reg('content-security-policy-report-only', v => {if (~v.indexOf('alibaba.com/csp') return n});
+			reg('content-security-policy-report-only', v => {if (~v.indexOf('alibaba.com/csp')) return n});
 			reg('eagleeye-traceid', simple);
 			reg('eagleid', simple);
 			// reg('server', v => {if (!v.indexOf('tengine')) return n});
