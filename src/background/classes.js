@@ -14,23 +14,28 @@ class Settings {
 			'lazy': false,
 			'sync': false,
 
-			'AlibabaCloud': true,
 			'Akamai': true,
+			'AlibabaCloud': true,
+			'AmazonOther': false,
 			'AmazonCloudfront': true,
+			'AmazonShield': true,
 			'Baidu': true,
 			'BelugaCDN': true,
 			'BootstrapCDN': true,
 			'BunnyCDN': true,
 			'CDN77': true,
+			'ChinaCache': true,
 			'Cloudflare': true,
 			'Fastly': true,
+			'fly.io': true,
+			'Flywheel': true,
 			'GitHub': true,
 			'GoCache': true,
 			'GoogleCloud': true,
 			'GoogleProjectShield': true,
+			'IPFS': true,
 			'Incapsula': true,
 			'Instart': true,
-			'IPFS': true,
 			'KeyCDN': true,
 			'Kinsta': true,
 			'Leaseweb': true,
@@ -39,6 +44,7 @@ class Settings {
 			'QiHU': true,
 			'Quantil': true,
 			'SingularCDN': true,
+			'StackpathNetDNA': true,
 			'Sucuri': true,
 			'Tor2web': true,
 			'Variti': true,
@@ -103,11 +109,11 @@ class Settings {
 		if (this.AlibabaCloud) {
 			const n = 'Alibaba Cloud';
 			const simple = () => {return n};
+			// reg('server', v => {if (!v.indexOf('tengine')) return n});
 			reg('ali-swift-global-savetime', simple);
 			reg('content-security-policy-report-only', v => {if (~v.indexOf('alibaba.com/csp')) return n});
 			reg('eagleeye-traceid', simple);
 			reg('eagleid', simple);
-			// reg('server', v => {if (!v.indexOf('tengine')) return n});
 			reg('vary', v => {if (~v.indexOf('ali-detector-type') || ~v.indexOf('ali-hng')) return n});
 			reg('x-swift-cachetime', simple);
 			reg('x-swift-savetime', simple);
@@ -115,9 +121,10 @@ class Settings {
 		if (this.Akamai) {
 			const n = 'Akamai';
 			const simple = () => {return n};
-			reg('edge-cache-tag', v => {if (~v.indexOf('akamai')) return n}); //not supposed to reach browsers, but I've seen it.
+			reg('edge-cache-tag', v => {if (~v.indexOf('akamai')) return n}); //not supposed to reach clients, but I've seen it.
 			reg('server', v => {if (~v.indexOf('akamai')) return n});
 			reg('set-cookie', v => {if (!v.indexOf('akacd_') || !v.indexOf('aka_a2')) return n});
+			reg('x-akamai-edgescape', simple); //not supposed to reach clients either.
 			reg('x-akamai-session-info', simple);
 			reg('x-akamai-ssl-client-sid', simple);
 			reg('x-akamai-transformed', simple);
@@ -125,20 +132,34 @@ class Settings {
 			reg('x-check-cacheable', v => {if (v == 'yes' || v == 'no') return n});
 		}
 		if (this.AmazonCloudfront) {
-			const n = 'Cloudfront (Amazon)';
+			const n = 'Amazon Cloudfront';
 			const simple = () => {return n};
+			reg('server', v => {if (!v.indexOf('cloudfront')) return n});
+			reg('via', v => {if (~v.indexOf('cloudfront')) return n});
 			reg('x-amz-cf-id', simple);
+			reg('x-cache', v => {if (~v.indexOf('cloudfront')) return n});
+		}
+		if (this.AmazonShield) {
+			const n = 'Amazon Shield';
+			const simple = () => {return n};
+			reg('x-amzn-requestid', simple);
+		}
+		if (this.AmazonOther) {
+			const n = 'Amazon S3/EC2/ELB';
+			const simple = () => {return n};
+			reg('server', v => {if (!v.indexOf('amazons3')) return n});
+			reg('set-cookie', v => {if (!v.indexOf('awsalb')) return n});
+			reg('x-amz-delete-marker', simple);
 			reg('x-amz-id-2', simple);
 			reg('x-amz-replication-status', simple);
 			reg('x-amz-request-id', simple);
 			reg('x-amz-version-id', simple);
-			reg('x-cache', v => {if (~v.indexOf('cloudfront')) return n});
-			reg('set-cookie', v => {if (!v.indexOf('awsalb')) return n});
-			reg('via', v => {if (~v.indexOf('cloudfront')) return n});
 		}
 		if (this.Baidu) {
 			const n = 'Baidu';
 			const simple = () => {return n};
+			reg('server', v => {if (v === 'jsp3/2.0.14') return n});
+			reg('set-cookie', v => {if (!v.indexOf('baiduid')) return n});
 			reg('x-bce-content-crc32', simple);
 			reg('x-bce-date', simple);
 			reg('x-bce-debug-id', simple);
@@ -146,12 +167,11 @@ class Settings {
 			reg('x-bce-request-id', simple);
 			reg('x-bce-security-token', simple);
 			reg('x-bce-storage-class', simple);
-			reg('server', v => {if (v === 'jsp3/2.0.14') return n});
-			reg('set-cookie', v => {if (!v.indexOf('baiduid')) return n});
 		}
 		if (this.BelugaCDN) {
 			const n = 'BelugaCDN';
 			const simple = () => {return n};
+			reg('server', v => {if (!v.indexOf('beluga')) return n});
 			reg('x-beluga-cache-status', simple);
 			reg('x-beluga-node', simple);
 			reg('x-beluga-record', simple);
@@ -159,7 +179,6 @@ class Settings {
 			reg('x-beluga-response-time-x', simple);
 			reg('x-beluga-status', simple);
 			reg('x-beluga-trace', simple);
-			reg('server', v => {if (!v.indexOf('beluga')) return n});
 		}
 		if (this.BootstrapCDN) {
 			const n = 'BootstrapCDN (Stackpath)';
@@ -178,6 +197,7 @@ class Settings {
 			reg('cf-bgj', simple);
 			reg('cf-cache-status', simple);
 			reg('cf-polished', simple);
+			reg('cf-railgun', simple);
 			reg('cf-ray', simple);
 			reg('expect-ct', v => {if (~v.indexOf('report-uri.cloudflare.com')) return n});
 			reg('server', v => {if (~v.indexOf('cloudflare')) return n});
@@ -186,16 +206,34 @@ class Settings {
 		if (this.CDN77) {
 			reg('server', v => {if (!v.indexOf('cdn77')) return 'CDN77'});
 		}
+		if (this.ChinaCache) {
+			reg('powered-by-chinacache', v => {return 'ChinaCache'});
+		}
 		if (this.Fastly) {
 			const n = 'Fastly';
 			const simple = () => {return n};
 			const rx = /^s\d+\.\d+,vs0,ve\d+$/;
-			reg('fastly-stats', simple);
 			reg('fastly-io-info', simple);
 			reg('fastly-restarts', simple);
+			reg('fastly-stats', simple);
 			reg('server', v => {if (v === 'artisanal bits') return n});
 			reg('vary', v => {if (~v.indexOf('fastly-ssl')) return n});
 			reg('x-timer', v => {if (rx.test(v)) return n});
+		}
+		if (this.Flywheel) {
+			const n = 'Flywheel';
+			const simple = () => {return n};
+			reg('server', v => {if (!v.indexOf('flywheel')) return n});
+			reg('x-fw-hash', simple);
+			reg('x-fw-serve', simple);
+			reg('x-fw-server', simple);
+			reg('x-fw-static', simple);
+			reg('x-fw-type', simple);
+		}
+		if (this['fly.io']) {
+			const n = 'fly.io';
+			reg('fly-request-id', () => {return n});
+			reg('server', v => {if (!v.indexOf(n)) return n});
 		}
 		if (this.GitHub) {
 			const n = 'GitHub';
@@ -228,12 +266,15 @@ class Settings {
 			reg('x-guploader-uploadid', simple);
 		}
 		if (this.GoogleProjectShield) {
-			reg('server', v => {if (v === 'shield') return 'Google Project Shield'});
-			reg('x-shield-request-id', () => {return 'Google Project Shield'});
+			const n = 'Google Project Shield';
+			reg('server', v => {if (v === 'shield') return n});
+			reg('x-shield-request-id', () => {return n});
 		}
 		if (this.Incapsula) {
 			const n = 'Incapsula';
-			reg('set-cookie', v => {if (!v.indexOf('visid_incap_')) return n});
+			reg('set-cookie', v => {
+				if (!v.indexOf('visid_incap_') || !v.indexOf('incap_ses_')) return n;
+			});
 			reg('x-cdn', v => {if (~v.indexOf('incapsula')) return n});
 			reg('x-iinfo', () => {return n});
 		}
@@ -301,11 +342,14 @@ class Settings {
 		if (this.SingularCDN) {
 			reg('server', v => {if (!v.indexOf('singularcdn')) return 'SingularCDN'});
 		}
+		if (this.StackpathNetDNA) {
+			reg('server', v => {if (!v.indexOf('netdna')) return 'NetDNA (Stackpath)'});
+		}
 		if (this.Sucuri) {
 			const n = 'Sucuri';
 			const simple = () => {return n};
-			reg('set-cookie', v => {if (!v.indexOf('sucuri-')) return n});
 			reg('server', v => {if (~v.indexOf('sucuri')) return n});
+			reg('set-cookie', v => {if (!v.indexOf('sucuri-')) return n});
 			reg('x-sucuri-cache', simple);
 			reg('x-sucuri-id', simple);
 		}
@@ -346,16 +390,20 @@ class Settings {
 				'source-age': simple,
 				'via': simple,
 				'x-age': simple,
+				'x-backend': simple,
 				'x-cache': simple,
 				'x-cache-age': simple,
+				'x-cache-enabled': simple,
+				'x-cache-hit': simple,
 				'x-cache-hits': simple,
 				'x-cache-node': simple,
 				'x-cache-status': simple,
+				'x-cacheable': simple,
 				'x-cached': simple,
 				'x-cached-by': simple,
 				'x-cached-since': simple,
-				'x-cacheserver': simple,
 				'x-cached-until': simple,
+				'x-cacheserver': simple,
 				'x-cdn': simple,
 				'x-edge-cache': simple,
 				'x-edge-cache-key': simple,
@@ -363,10 +411,11 @@ class Settings {
 				'x-edge-location': simple,
 				'x-geo-city': simple,
 				'x-geo-country': simple,
-				'x-geo-ipaddr': simple,
 				'x-geo-ip': simple,
+				'x-geo-ipaddr': simple,
 				'x-geo-lat': simple,
 				'x-geo-lon': simple,
+				'x-hits': simple,
 				'x-proxy-cache': simple,
 				'x-served-by': simple,
 				'x-served-from': simple,
