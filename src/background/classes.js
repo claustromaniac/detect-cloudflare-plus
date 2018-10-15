@@ -16,9 +16,8 @@ class Settings {
 
 			'Akamai': true,
 			'AlibabaCloud': true,
-			'AmazonOther': false,
 			'AmazonCloudfront': true,
-			'AmazonShield': true,
+			'AmazonOther': false,
 			'Baidu': true,
 			'BelugaCDN': true,
 			'BootstrapCDN': true,
@@ -47,6 +46,7 @@ class Settings {
 			'StackpathNetDNA': true,
 			'Sucuri': true,
 			'Tor2web': true,
+			'TransparentCDN': true,
 			'Variti': true,
 			'VerizonEdgecast': true,
 			'Zenedge': true
@@ -106,18 +106,6 @@ class Settings {
 			this.patterns[h].push(func);
 		};
 
-		if (this.AlibabaCloud) {
-			const n = 'Alibaba Cloud';
-			const simple = () => {return n};
-			// reg('server', v => {if (!v.indexOf('tengine')) return n});
-			reg('ali-swift-global-savetime', simple);
-			reg('content-security-policy-report-only', v => {if (~v.indexOf('alibaba.com/csp')) return n});
-			reg('eagleeye-traceid', simple);
-			reg('eagleid', simple);
-			reg('vary', v => {if (~v.indexOf('ali-detector-type') || ~v.indexOf('ali-hng')) return n});
-			reg('x-swift-cachetime', simple);
-			reg('x-swift-savetime', simple);
-		}
 		if (this.Akamai) {
 			const n = 'Akamai';
 			const simple = () => {return n};
@@ -131,6 +119,18 @@ class Settings {
 			reg('x-cache-key', v => {if (v) return n});
 			reg('x-check-cacheable', v => {if (v == 'yes' || v == 'no') return n});
 		}
+		if (this.AlibabaCloud) {
+			const n = 'Alibaba Cloud';
+			const simple = () => {return n};
+			// reg('server', v => {if (!v.indexOf('tengine')) return n});
+			reg('ali-swift-global-savetime', simple);
+			reg('content-security-policy-report-only', v => {if (~v.indexOf('alibaba.com/csp')) return n});
+			reg('eagleeye-traceid', simple);
+			reg('eagleid', simple);
+			reg('vary', v => {if (~v.indexOf('ali-detector-type') || ~v.indexOf('ali-hng')) return n});
+			reg('x-swift-cachetime', simple);
+			reg('x-swift-savetime', simple);
+		}
 		if (this.AmazonCloudfront) {
 			const n = 'Amazon Cloudfront';
 			const simple = () => {return n};
@@ -139,13 +139,8 @@ class Settings {
 			reg('x-amz-cf-id', simple);
 			reg('x-cache', v => {if (~v.indexOf('cloudfront')) return n});
 		}
-		if (this.AmazonShield) {
-			const n = 'Amazon Shield';
-			const simple = () => {return n};
-			reg('x-amzn-requestid', simple);
-		}
 		if (this.AmazonOther) {
-			const n = 'Amazon S3/EC2/ELB';
+			const n = 'Amazon (other)';
 			const simple = () => {return n};
 			reg('server', v => {if (!v.indexOf('amazons3')) return n});
 			reg('set-cookie', v => {if (!v.indexOf('awsalb')) return n});
@@ -154,6 +149,8 @@ class Settings {
 			reg('x-amz-replication-status', simple);
 			reg('x-amz-request-id', simple);
 			reg('x-amz-version-id', simple);
+			reg('x-amzn-errortype', simple);
+			reg('x-amzn-requestid', simple);
 		}
 		if (this.Baidu) {
 			const n = 'Baidu';
@@ -356,6 +353,13 @@ class Settings {
 		if (this.Tor2web) {
 			reg('x-check-tor', () => {return 'Tor2web'});
 		}
+		if (this.TransparentCDN) {
+			const n = 'TransparentCDN';
+			const simple = () => {return n};
+			reg('content-security-policy-report-only', v => {if (~v.indexOf('transparentcdn.com')) return n});
+			reg('tp-cache', simple);
+			reg('tp-l2-cache', simple);
+		}
 		if (this.Varity) {
 			reg('x-variti-ccr', () => {return 'Varity'});
 		}
@@ -405,6 +409,7 @@ class Settings {
 				'x-cached-until': simple,
 				'x-cacheserver': simple,
 				'x-cdn': simple,
+				'x-device': simple,
 				'x-edge-cache': simple,
 				'x-edge-cache-key': simple,
 				'x-edge-ip': simple,

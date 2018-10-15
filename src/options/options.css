@@ -8,7 +8,7 @@ form {
 }
 
 label {
-	width: 33%;
+	width: 50%;
     float: left;
 	text-shadow: -1px 0 white, 0 1px white, 1px 0 white, 0 -1px white;
 }
