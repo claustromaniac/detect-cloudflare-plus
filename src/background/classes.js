@@ -17,7 +17,7 @@ class Settings {
 			'Akamai': true,
 			'AlibabaCloud': true,
 			'AmazonCloudfront': true,
-			'AmazonOther': false,
+			'AmazonOther': true,
 			'Baidu': true,
 			'BelugaCDN': true,
 			'BootstrapCDN': true,
