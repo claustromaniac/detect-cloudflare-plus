@@ -23,15 +23,18 @@ class Settings {
 			'BootstrapCDN': true,
 			'BunnyCDN': true,
 			'CDN77': true,
+			'CDNetworks': true,
 			'ChinaCache': true,
 			'Cloudflare': true,
 			'Fastly': true,
 			'fly.io': true,
 			'Flywheel': true,
+			'G-CDN': true,
 			'GitHub': true,
 			'GoCache': true,
 			'GoogleCloud': true,
 			'GoogleProjectShield': true,
+			'Highwinds': true,
 			'IPFS': true,
 			'Incapsula': true,
 			'Instart': true,
@@ -42,6 +45,7 @@ class Settings {
 			'Netlify': true,
 			'QiHU': true,
 			'Quantil': true,
+			'section.io': true,
 			'SingularCDN': true,
 			'StackpathNetDNA': true,
 			'Sucuri': true,
@@ -203,6 +207,9 @@ class Settings {
 		if (this.CDN77) {
 			reg('server', v => {if (!v.indexOf('cdn77')) return 'CDN77'});
 		}
+		if (this.CDNetworks) {
+			reg('x-px', () => {return 'CDNetworks'});
+		}
 		if (this.ChinaCache) {
 			reg('powered-by-chinacache', v => {return 'ChinaCache'});
 		}
@@ -231,6 +238,11 @@ class Settings {
 			const n = 'fly.io';
 			reg('fly-request-id', () => {return n});
 			reg('server', v => {if (!v.indexOf(n)) return n});
+		}
+		if (this['G-CDN']) {
+			const n = 'G-CDN';
+			const rx = /^[\w\d]+-[\w\d]+-[\w\d]+$/;
+			reg('x-id', v => {if (rx.test(v)) return n});
 		}
 		if (this.GitHub) {
 			const n = 'GitHub';
@@ -267,6 +279,9 @@ class Settings {
 			reg('server', v => {if (v === 'shield') return n});
 			reg('x-shield-request-id', () => {return n});
 		}
+		if (this.Highwinds) {
+			reg('x-hw', () => {return 'Highwinds (Stackpath)'});
+		}
 		if (this.Incapsula) {
 			const n = 'Incapsula';
 			reg('set-cookie', v => {
@@ -276,7 +291,7 @@ class Settings {
 			reg('x-iinfo', () => {return n});
 		}
 		if (this.Instart) {
-			const simple = () => {return 'Instart'};
+			const simple = () => {return 'Instart Logic'};
 			reg('x-instart-cache-id', simple);
 			reg('x-instart-ip-classification', simple);
 			reg('x-instart-ip-score', simple);
@@ -290,25 +305,31 @@ class Settings {
 			reg('x-ipfs-pop', simple);
 		}
 		if (this.KeyCDN) {
-			reg('server', v => {if (!v.indexOf('keycdn')) return 'KeyCDN'});
-		}
-		if (this.Kinsta) {
-			const n = 'Kinsta';
+			const n = 'KeyCDN';
+			reg('server', v => {if (!v.indexOf('keycdn')) return n});
 			reg('server', (v, obj) => {
 				if (!v.indexOf('kinsta')) {
-					if (obj.hasOwnProperty(n)) return n;
-					obj[n] = 1;
+					if (obj[n]) return n;
+					obj.kinsta = true;
 				}
 			});
 			reg('x-cache', (v, obj) => {
-				if (obj[n]) return n;
-				obj[n] = 0;
+				if (obj.kinsta) return n;
+				obj[n] = true;
 			});
 			reg('x-edge-location', (v, obj) => {
-				if (obj[n]) return n;
-				obj[n] = 0;
+				if (obj.kinsta) return n;
+				obj[n] = true;
 			});
-			reg('x-kinsta-cache', () => {return n});
+			reg('x-kinsta-cache', (v, obj) => {
+				if (obj[n]) return n;
+				obj.kinsta = true;
+			});
+		}
+		if (this.Kinsta) {
+			const n = 'Kinsta';
+			reg('server', (v, obj) => { if (!v.indexOf('kinsta')) return n});
+			reg('x-kinsta-cache', (v, obj) => {return n});
 		}
 		if (this.Leaseweb) {
 			const n = 'Leaseweb';
@@ -335,6 +356,9 @@ class Settings {
 			const simple = () => {return 'QiHU'};
 			reg('x-qhcdn', simple);
 			reg('x-qstatic-hit', simple);
+		}
+		if (this['section.io']) {
+			reg('section-io-id', () => {return 'section.io'});
 		}
 		if (this.SingularCDN) {
 			reg('server', v => {if (!v.indexOf('singularcdn')) return 'SingularCDN'});
@@ -389,7 +413,11 @@ class Settings {
 				'cache-tag': simple,
 				'cdn-cache': simple,
 				'cdn-cache-hit': simple,
+				'cdn-cachedat': simple,
 				'cdn-node': simple,
+				'cdn-pullzone': simple,
+				'cdn-requestid': simple,
+				'cdn-uid': simple,
 				'edge-control': simple,
 				'source-age': simple,
 				'via': simple,
@@ -400,6 +428,7 @@ class Settings {
 				'x-cache-enabled': simple,
 				'x-cache-hit': simple,
 				'x-cache-hits': simple,
+				'x-cache-main': simple,
 				'x-cache-node': simple,
 				'x-cache-status': simple,
 				'x-cacheable': simple,
@@ -421,6 +450,7 @@ class Settings {
 				'x-geo-lat': simple,
 				'x-geo-lon': simple,
 				'x-hits': simple,
+				'x-proxy-bypass': simple,
 				'x-proxy-cache': simple,
 				'x-served-by': simple,
 				'x-served-from': simple,
