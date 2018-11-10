@@ -128,6 +128,7 @@ class Settings {
 			const simple = () => {return n};
 			// reg('server', v => {if (!v.indexOf('tengine')) return n});
 			reg('ali-swift-global-savetime', simple);
+			reg('content-security-policy', v => {if (~v.indexOf('alibaba.com/csp')) return n});
 			reg('content-security-policy-report-only', v => {if (~v.indexOf('alibaba.com/csp')) return n});
 			reg('eagleeye-traceid', simple);
 			reg('eagleid', simple);
@@ -202,13 +203,15 @@ class Settings {
 			reg('cf-ray', simple);
 			reg('expect-ct', v => {if (~v.indexOf('report-uri.cloudflare.com')) return n});
 			reg('server', v => {if (~v.indexOf('cloudflare')) return n});
-			reg('set-cookie', v => {if (!v.indexOf('__cfduid') || !v.indexOf('__cflib')) return n});
+			reg('set-cookie', v => {if (!v.indexOf('__cfduid') || !v.indexOf('__cflb')) return n});
 		}
 		if (this.CDN77) {
 			reg('server', v => {if (!v.indexOf('cdn77')) return 'CDN77'});
 		}
 		if (this.CDNetworks) {
-			reg('x-px', () => {return 'CDNetworks'});
+			const n = 'CDNetworks';
+			reg('x-px', () => {return n});
+			reg('x-hello-human', v => {if (~v.indexOf('cdnetworks')) return n});
 		}
 		if (this.ChinaCache) {
 			reg('powered-by-chinacache', v => {return 'ChinaCache'});
@@ -249,7 +252,7 @@ class Settings {
 			reg('expect-ct', v => {if (~v.indexOf('github.com')) return n});
 			reg('server', v => {if (v === 'github.com') return n});
 			reg('set-cookie', v => {if (!v.indexOf('__gh_sess')) return n});
-			reg('x-github-request-id', () => {return 'GitHub'});
+			reg('x-github-request-id', () => {return n});
 		}
 		if (this.GoCache) {
 			const n = 'GoCache';
@@ -328,8 +331,8 @@ class Settings {
 		}
 		if (this.Kinsta) {
 			const n = 'Kinsta';
-			reg('server', (v, obj) => { if (!v.indexOf('kinsta')) return n});
-			reg('x-kinsta-cache', (v, obj) => {return n});
+			reg('server', v => { if (!v.indexOf('kinsta')) return n});
+			reg('x-kinsta-cache', () => {return n});
 		}
 		if (this.Leaseweb) {
 			const n = 'Leaseweb';
@@ -380,6 +383,7 @@ class Settings {
 		if (this.TransparentCDN) {
 			const n = 'TransparentCDN';
 			const simple = () => {return n};
+			reg('content-security-policy', v => {if (~v.indexOf('transparentcdn.com')) return n});
 			reg('content-security-policy-report-only', v => {if (~v.indexOf('transparentcdn.com')) return n});
 			reg('tp-cache', simple);
 			reg('tp-l2-cache', simple);
@@ -428,6 +432,7 @@ class Settings {
 				'x-cache-enabled': simple,
 				'x-cache-hit': simple,
 				'x-cache-hits': simple,
+				'x-cache-lookup': simple,
 				'x-cache-main': simple,
 				'x-cache-node': simple,
 				'x-cache-status': simple,
@@ -438,6 +443,7 @@ class Settings {
 				'x-cached-until': simple,
 				'x-cacheserver': simple,
 				'x-cdn': simple,
+				'x-datacenter': simple,
 				'x-device': simple,
 				'x-edge-cache': simple,
 				'x-edge-cache-key': simple,
@@ -475,7 +481,7 @@ class Settings {
 ////////////////////// INFO classes //////////////////////////////
 
 class CDNInfo {
-	constructor(dom, count) {
+	constructor() {
 		this.counters = new Map();
 	}
 	inc(url) {
